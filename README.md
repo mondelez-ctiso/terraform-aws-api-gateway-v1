@@ -35,7 +35,9 @@ Here are some examples of how you can use this module in your inventory structur
 ### Basic Example
 ```hcl
   module "api_gateway" {
-    source = "git@github.com:mondelez-ctiso/terraform-aws-api-gateway-v1"
+    source  = "spacelift.io/mondelez-ctiso/terraform-aws-api-gateway-v1/aws"
+    version = "1.0.0"
+    
     providers = { aws = aws }
 
     api_gateway = {
@@ -64,7 +66,9 @@ Here are some examples of how you can use this module in your inventory structur
   # API Gateway
   ###################
   module "api_gateway" {
-    source = "git@github.com:mondelez-ctiso/terraform-aws-api-gateway-v1"
+    source  = "spacelift.io/mondelez-ctiso/terraform-aws-api-gateway-v1/aws"
+    version = "1.0.0"
+    
     providers = { aws = aws }
 
     tags = var.tags
@@ -72,17 +76,17 @@ Here are some examples of how you can use this module in your inventory structur
     cors_origin_domain = var.cors_origin_domain
 
     api_gateway = {
-      name                                = "serverless-bitlocker-recovery"
+      name                                = "my-api-gateway-name"
       hosted_zone_id                      = data.aws_ssm_parameter.hosted_zone.value
       custom_domain                       = "api.${var.domain}"
       acm_cert_arn                        = module.acm_cert.arn
-      base_path_mapping_active_stage_name = ${terraform.workspace}
+      base_path_mapping_active_stage_name = var.spacelift_stack_branch
     }
 
     api_gateway_stages = [
       {
-        stage_name        = "non-prod"
-        stage_description = "The stage defined for non-prod, tied to the default deployment."
+        stage_name        = var.spacelift_stack_branch
+        stage_description = "The stage defined for ${var.spacelift_stack_branch}, tied to the default deployment."
       },
     ]
 
@@ -96,7 +100,7 @@ Here are some examples of how you can use this module in your inventory structur
     // look for "api_gateway_methods complete example" below for complete data structure
     api_gateway_methods = [
       {
-        resource_path = "getBitlockerKey"
+        resource_path = "getSomethingGreat"
         api_method = {
           authorizer_name = "pingFedAuth"
 
@@ -117,7 +121,9 @@ Here are some examples of how you can use this module in your inventory structur
   # Custom Domain Certificate ##
   ##############################
   module "acm_cert" {
-    source         = "git@github.com:procter-gamble/terraform-module-aws-acm-certificate"
+    source  = "terraform-aws-modules/acm/aws"
+    version = "~> 3.0"
+
     providers      = { aws = aws }
     domain         = "api.${var.domain}"
     hosted_zone_id = data.aws_ssm_parameter.hosted_zone.value
@@ -128,7 +134,9 @@ Here are some examples of how you can use this module in your inventory structur
   # API Gateway
   ###################
   module "api_gateway" {
-    source = "git@github.com:mondelez-ctiso/terraform-aws-api-gateway-v1"
+    source  = "spacelift.io/mondelez-ctiso/terraform-aws-api-gateway-v1/aws"
+    version = "1.0.0"
+    
     providers = { aws = aws }
 
     tags = var.tags
@@ -136,17 +144,17 @@ Here are some examples of how you can use this module in your inventory structur
     cors_origin_domain = var.cors_origin_domain
 
     api_gateway = {
-      name                                = "serverless-bitlocker-recovery"
+      name                                = "my-api-gateway-name"
       hosted_zone_id                      = data.aws_ssm_parameter.hosted_zone.value
       custom_domain                       = "api.${var.domain}"
       acm_cert_arn                        = module.acm_cert.arn
-      base_path_mapping_active_stage_name = ${terraform.workspace}
+      base_path_mapping_active_stage_name = var.spacelift_stack_branch
     }
 
     api_gateway_stages = [
       {
-        stage_name        = "non-prod"
-        stage_description = "The stage defined for non-prod, tied to the default deployment."
+        stage_name        = var.spacelift_stack_branch
+        stage_description = "The stage defined for ${var.spacelift_stack_branch}, tied to the default deployment."
       },
     ]
 
@@ -160,7 +168,7 @@ Here are some examples of how you can use this module in your inventory structur
     // look for "api_gateway_methods complete example" below for complete data structure
     api_gateway_methods = [
       {
-        resource_path = "getBitlockerKey"
+        resource_path = "getSomethingGreat"
         api_method = {
           authorizer_name = "pingFedAuth"
 
@@ -179,12 +187,12 @@ Here are some examples of how you can use this module in your inventory structur
     source  = "terraform-aws-modules/security-group/aws"
     version = "~> 3.0"
 
-    name        = "lambda-sg-bitlocker-recovery"
-    description = "Lambda security group for bitlocker recovery"
+    name        = "lambda-sg"
+    description = "Lambda security group for something great"
     vpc_id      = module.aws_values.vpc.id
 
-    egress_cidr_blocks = ["0.0.0.0/0"]
-    egress_rules = ["https-443-tcp", "dns-tcp", "dns-udp", "ldaps-tcp"]
+    # Does your lambda require any egress at all for an API call itself?
+    egress_rules = ["https-443-tcp", "dns-tcp", "dns-udp"]
 
     tags = var.tags
   }
@@ -193,10 +201,11 @@ Here are some examples of how you can use this module in your inventory structur
   # Build and Deploy Lambda module
   #############################################
   module "app_lambda" {
-    source  = "git@github.com:procter-gamble/terraform-aws-lambda"
+    source  = "terraform-aws-modules/lambda/aws"
+    version = "3.3.1"
 
-    function_name = "bitlocker-recovery-key"
-    description   = "Lambda function to call AD via LDAPS and retrieve a bitlocker key based on the computer host name."
+    function_name = "get-something-lambda"
+    description   = "Lambda function to get something."
     handler       = "index.lambda_handler"
     runtime       = "python3.8"
 
@@ -212,7 +221,7 @@ Here are some examples of how you can use this module in your inventory structur
     vpc_subnet_ids        = ["subnet-id"]
     vpc_security_group_ids = [module.lambda_security_group.this_security_group_id]
 
-    kms_key_arn = module.kms.arn # From github.com/procter-gamble/terraform-module-kms
+    kms_key_arn = module.kms.arn 
 
     environment_variables = {
       ORIGIN = var.cors_origin_domain
@@ -234,7 +243,7 @@ Here are some examples of how you can use this module in your inventory structur
               "secretsmanager:DescribeSecret",
               "secretsmanager:ListSecretVersionIds"
             ],
-            "Resource" : [module.secret.arn] # From github.com/procter-gamble/terraform-module-secrets
+            "Resource" : [module.secret.arn] 
           },
           {
             "Effect" : "Allow",
@@ -242,7 +251,7 @@ Here are some examples of how you can use this module in your inventory structur
               "kms:Decrypt",
               "kms:DescribeKey",
             ],
-            "Resource" : [module.kms.arn] # From github.com/procter-gamble/terraform-module-kms
+            "Resource" : [module.kms.arn] 
           }
         ]
     })
@@ -256,11 +265,11 @@ Here are some examples of how you can use this module in your inventory structur
   }
 
   module "ping_authorizer" {
-    source  = "git@github.com:procter-gamble/terraform-aws-lambda"
-
-
-    function_name = "bitlocker-authorizer"
-    description   = "Ping Federate authorizer for bitlocker app."
+    source  = "terraform-aws-modules/lambda/aws"
+    version = "3.3.1"
+    
+    function_name = "authorizer"
+    description   = "Ping Federate authorizer for this app."
     handler       = "auth.lambda_handler"
     runtime       = "nodejs12.x"
     tags          = var.tags
@@ -283,12 +292,12 @@ Here are some examples of how you can use this module in your inventory structur
       }
     ]
 
-    kms_key_arn = module.kms.arn # From github.com/procter-gamble/terraform-module-kms
+    kms_key_arn = module.kms.arn 
 
     environment_variables = {
       PingClientID    = data.aws_ssm_parameter.ping_client_id.value
       Domain          = data.aws_ssm_parameter.ping_instance.value
-      GroupAttributes = "{\"isAdmin\": \"GDS-Infosec-Arch-Engineering\"}"
+      GroupAttributes = "{\"isAdmin\": \"SOME_AD_GROUP_NAME\"}"
       COOKIE_AUTH     = true
     }
 
@@ -307,7 +316,7 @@ Here are some examples of how you can use this module in your inventory structur
               "kms:Decrypt",
               "kms:DescribeKey",
             ],
-            "Resource" : [module.kms.arn] # From github.com/procter-gamble/terraform-module-kms
+            "Resource" : [module.kms.arn] 
           }
         ]
     })
