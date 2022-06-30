@@ -1,29 +1,31 @@
 ###########################
 # Supporting resources
 ###########################
-module "lambda_function" {
-  source  = "terraform-aws-modules/lambda/aws"
-  version = "3.3.1"
+# This needs Python on the container... RIP
 
-  function_name = "hello-world-lambda"
-  description   = "Hello-World lambda function"
+# module "lambda_function" {
+#   source  = "terraform-aws-modules/lambda/aws"
+#   version = "3.3.1"
 
-  handler = "index.lambda_handler"
-  runtime = "python3.8"
+#   function_name = "hello-world-lambda"
+#   description   = "Hello-World lambda function"
 
-  publish = true
+#   handler = "index.lambda_handler"
+#   runtime = "python3.8"
 
-  create_package = true
+#   publish = true
 
-  source_path = "../test_infrastructure/src_lambda"
+#   create_package = true
 
-  allowed_triggers = {
-    AllowExecutionFromAPIGateway = {
-      service = "apigateway"
-      arn     = module.api_gateway.rest_api_execution_arn
-    }
-  }
-}
+#   source_path = "../test_infrastructure/src_lambda"
+
+#   allowed_triggers = {
+#     AllowExecutionFromAPIGateway = {
+#       service = "apigateway"
+#       arn     = module.api_gateway.rest_api_execution_arn
+#     }
+#   }
+# }
 
 module "api_gateway" {
   source = "../..//."
@@ -37,7 +39,7 @@ module "api_gateway" {
       api_method = {
         authorization = "NONE"
         integration = {
-          uri = module.lambda_function.lambda_function_invoke_arn
+          uri = "module.lambda_function.lambda_function_invoke_arn"
         }
       }
     }
