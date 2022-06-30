@@ -5,7 +5,7 @@ module_version: 1.0.0
 test_defaults:
   before_plan:
     - pwd
-    - cp -a /mnt/workspace/source/examples/test_infrastructure/additional_outputs/. .  
+    - cp -a /mnt/workspace/source/examples/test_infrastructure/additional_outputs/. ../  
     - ls -la
     - cat ./additional_outputs.tf
   after_apply:
