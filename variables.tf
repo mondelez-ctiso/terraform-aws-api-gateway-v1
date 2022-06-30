@@ -1,4 +1,4 @@
-variable tags {
+variable "tags" {
   type        = map(string)
   default     = {}
   description = "Tags to add to all resources."
@@ -19,14 +19,14 @@ variable tags {
   }
 }
 
-variable api_gateway_default {
+variable "api_gateway_default" {
   description = "AWS API Gateway Settings default."
   type        = any
   default = {
     name                                = null
     api_key_source                      = null
     binary_media_types                  = null
-    description                         = "Managed by the P&G AWS API Gateway Terraform Module https://github.com/procter-gamble/terraform-module-aws-api-gateway.git"
+    description                         = "Managed by terraform-aws-api-gateway-v1 module"
     endpoint_configuration              = null
     minimum_compression_size            = null
     policy                              = null
@@ -38,11 +38,11 @@ variable api_gateway_default {
     default_deployment_description      = null
     default_deployment_variables        = null
     client_cert_enabled                 = false
-    client_cert_description             = "Managed by the P&G AWS API Gateway Terraform Module https://github.com/procter-gamble/terraform-module-aws-api-gateway.git"
+    client_cert_description             = "Managed by terraform-aws-api-gateway-v1 module"
   }
 }
 
-variable api_gateway {
+variable "api_gateway" {
   description = "AWS API Gateway Settings."
   type        = any
   default     = null
@@ -179,7 +179,7 @@ variable api_gateway {
   }
 }
 
-variable api_gateway_stage_default {
+variable "api_gateway_stage_default" {
   description = "AWS API Gateway stage default."
   type        = any
   default = {
@@ -189,14 +189,14 @@ variable api_gateway_stage_default {
     cache_cluster_size    = null
     client_certificate_id = null
     documentation_version = null
-    stage_description     = "Managed by the P&G AWS API Gateway Terraform Module https://github.com/procter-gamble/terraform-module-aws-api-gateway.git"
+    stage_description     = "Managed by terraform-aws-api-gateway-v1 module"
     stage_variables       = null
     xray_tracing_enabled  = false
     waf_id                = null
   }
 }
 
-variable api_gateway_stages {
+variable "api_gateway_stages" {
   description = "AWS API Gateway stage."
   default     = []
   type        = any
@@ -219,73 +219,73 @@ variable api_gateway_stages {
 
   // stage_name
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : can(lookup(stage, "stage_name")) ? length(lookup(stage, "stage_name")) > 1 : false], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : can(lookup(stage, "stage_name")) ? length(lookup(stage, "stage_name")) > 1 : false], false)) : true
     error_message = "If the set of 'api_gateway_stages' is provided, each value must contain an attribute 'stage_name' with length > 1."
   }
 
   // description
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : length(lookup(stage, "stage_description")) > 1], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : length(lookup(stage, "stage_description")) > 1], false)) : true
     error_message = "Optional attribute 'stage_description' of 'api_gateway_stages' must be a string if specified with length > 1."
   }
 
   // stage_variables
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : can(lookup(stage, "stage_variables")) ? can(tomap(lookup(stage, "stage_variables"))) : true], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : can(lookup(stage, "stage_variables")) ? can(tomap(lookup(stage, "stage_variables"))) : true], false)) : true
     error_message = "Optional attribute 'stage_variables' of 'api_gateway_stages' must be an object map."
   }
 
   // cache_cluster_enabled
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : can(lookup(stage, "cache_cluster_enabled")) ? can(tobool(lookup(stage, "cache_cluster_enabled"))) : true], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : can(lookup(stage, "cache_cluster_enabled")) ? can(tobool(lookup(stage, "cache_cluster_enabled"))) : true], false)) : true
     error_message = "Optional attribute 'cache_cluster_enabled' of 'api_gateway_stages' must be 'true' or 'false'."
   }
 
   // cache_cluster_size
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : can(lookup(stage, "cache_cluster_size")) ? can(tonumber(lookup(stage, "cache_cluster_size"))) && contains([0.5, 1.6, 6.1, 13.5, 28.4, 58.2, 118, 237], lookup(stage, "cache_cluster_size")) : true], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : can(lookup(stage, "cache_cluster_size")) ? can(tonumber(lookup(stage, "cache_cluster_size"))) && contains([0.5, 1.6, 6.1, 13.5, 28.4, 58.2, 118, 237], lookup(stage, "cache_cluster_size")) : true], false)) : true
     error_message = "Optional attribute 'cache_cluster_size' of 'api_gateway_stages' must be a number in the following set [0.5, 1.6, 6.1, 13.5, 28.4, 58.2, 118, 237]."
   }
 
   // client_certificate_id
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : length(lookup(stage, "client_certificate_id")) > 1], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : length(lookup(stage, "client_certificate_id")) > 1], false)) : true
     error_message = "Optional attribute 'client_certificate_id' of 'api_gateway_stages' must be a string if specified with length > 1."
   }
 
   // documentation_version
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : length(lookup(stage, "documentation_version")) > 1], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : length(lookup(stage, "documentation_version")) > 1], false)) : true
     error_message = "Optional attribute 'documentation_version' of 'api_gateway_stages' must be a string if specified with length > 1."
   }
 
   // xray_tracing_enabled
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : can(lookup(stage, "xray_tracing_enabled")) ? can(tobool(lookup(stage, "xray_tracing_enabled"))) : true], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : can(lookup(stage, "xray_tracing_enabled")) ? can(tobool(lookup(stage, "xray_tracing_enabled"))) : true], false)) : true
     error_message = "Optional attribute 'xray_tracing_enabled' of 'api_gateway_stages' must be 'true' or 'false'."
   }
 
   // waf_id
   validation {
-    condition     = var.api_gateway_stages != [] ? ! can(index([for stage in var.api_gateway_stages : length(lookup(stage, "waf_id")) > 1], false)) : true
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : length(lookup(stage, "waf_id")) > 1], false)) : true
     error_message = "Optional attribute 'waf_id' of 'api_gateway_stages' must be a string if specified with length > 1."
   }
 
   // TODO: access_log_settings
 }
 
-variable api_gateway_model_default {
+variable "api_gateway_model_default" {
   description = "AWS API Gateway model default."
   type        = any
   default = {
     name         = null
-    description  = "Managed by the P&G AWS API Gateway Terraform Module https://github.com/procter-gamble/terraform-module-aws-api-gateway.git"
+    description  = "Managed by terraform-aws-api-gateway-v1 module"
     content_type = "application/json"
     schema       = "{\"type\":\"object\"}"
   }
 }
 
-variable api_gateway_models {
+variable "api_gateway_models" {
   description = "AWS API Gateway models."
   default     = []
   type        = set(any)
@@ -300,41 +300,41 @@ variable api_gateway_models {
 
   // name
   validation {
-    condition     = var.api_gateway_models != [] ? ! can(index([for model in var.api_gateway_models : can(lookup(model, "name")) ? length(lookup(model, "name")) > 1 : false], false)) : true
+    condition     = var.api_gateway_models != [] ? !can(index([for model in var.api_gateway_models : can(lookup(model, "name")) ? length(lookup(model, "name")) > 1 : false], false)) : true
     error_message = "If the set of 'api_gateway_models' is provided, each value must contain an attribute 'name' with length > 1."
   }
 
   // description
   validation {
-    condition     = var.api_gateway_models != [] ? ! can(index([for model in var.api_gateway_models : length(lookup(model, "description")) > 1], false)) : true
+    condition     = var.api_gateway_models != [] ? !can(index([for model in var.api_gateway_models : length(lookup(model, "description")) > 1], false)) : true
     error_message = "Optional attribute 'description' of 'api_gateway_models' must be a string if specified with length > 1."
   }
 
   // content_type
   validation {
-    condition     = var.api_gateway_models != [] ? ! can(index([for model in var.api_gateway_models : length(lookup(model, "content_type")) > 1], false)) : true
+    condition     = var.api_gateway_models != [] ? !can(index([for model in var.api_gateway_models : length(lookup(model, "content_type")) > 1], false)) : true
     error_message = "Optional attribute 'content_type' of 'api_gateway_models' must be a string if specified with length > 1."
   }
 
   // schema
   validation {
-    condition     = var.api_gateway_models != [] ? ! can(index([for model in var.api_gateway_models : length(lookup(model, "schema")) > 1], false)) : true
+    condition     = var.api_gateway_models != [] ? !can(index([for model in var.api_gateway_models : length(lookup(model, "schema")) > 1], false)) : true
     error_message = "Optional attribute 'schema' of 'api_gateway_models' must be a string if specified with length > 1."
   }
 }
 
-variable api_keys_default {
+variable "api_keys_default" {
   description = "AWS API Gateway API Keys default"
   type        = any
   default = {
     key_name        = null
-    key_description = "Managed by the P&G AWS API Gateway Terraform Module https://github.com/procter-gamble/terraform-module-aws-api-gateway.git"
+    key_description = "Managed by terraform-aws-api-gateway-v1 module"
     enabled         = true
     value           = null
   }
 }
 
-variable api_keys {
+variable "api_keys" {
   description = "AWS API Gateway API Keys."
   default     = []
   type        = any
@@ -349,40 +349,40 @@ variable api_keys {
 
   // key_name
   validation {
-    condition     = var.api_keys != [] ? ! can(index([for api_key in var.api_keys : can(lookup(api_key, "key_name")) ? length(lookup(api_key, "key_name")) > 1 : false], false)) : true
+    condition     = var.api_keys != [] ? !can(index([for api_key in var.api_keys : can(lookup(api_key, "key_name")) ? length(lookup(api_key, "key_name")) > 1 : false], false)) : true
     error_message = "If the set of 'api_keys' is provided, each value must contain an attribute 'key_name' with length > 1."
   }
 
   // key_description
   validation {
-    condition     = var.api_keys != [] ? ! can(index([for api_key in var.api_keys : length(lookup(api_key, "key_description")) > 1], false)) : true
+    condition     = var.api_keys != [] ? !can(index([for api_key in var.api_keys : length(lookup(api_key, "key_description")) > 1], false)) : true
     error_message = "Optional attribute 'key_description' of 'api_keys' must be a string if specified with length > 1."
   }
 
   // enabled
   validation {
-    condition     = var.api_keys != [] ? ! can(index([for api_key in var.api_keys : can(lookup(api_key, "enabled")) ? can(tobool(lookup(api_key, "enabled"))) : true], false)) : true
+    condition     = var.api_keys != [] ? !can(index([for api_key in var.api_keys : can(lookup(api_key, "enabled")) ? can(tobool(lookup(api_key, "enabled"))) : true], false)) : true
     error_message = "Optional attribute 'enabled' of 'api_keys' must be 'true' or 'false'."
   }
 
   // value
   validation {
-    condition     = var.api_keys != [] ? ! can(index([for api_key in var.api_keys : length(lookup(api_key, "value")) > 1], false)) : true
+    condition     = var.api_keys != [] ? !can(index([for api_key in var.api_keys : length(lookup(api_key, "value")) > 1], false)) : true
     error_message = "Optional attribute 'value' of 'api_keys' must be a string if specified with length > 1."
   }
 }
 
-variable vpc_link_default {
+variable "vpc_link_default" {
   description = "AWS API Gateway VPC link defaults."
   type        = any
   default = {
     vpc_link_name        = null
-    vpc_link_description = "Managed by the P&G AWS API Gateway Terraform Module https://github.com/procter-gamble/terraform-module-aws-api-gateway.git"
+    vpc_link_description = "Managed by terraform-aws-api-gateway-v1 module"
     target_arns          = null
   }
 }
 
-variable vpc_links {
+variable "vpc_links" {
   description = "AWS API Gateway VPC links."
   default     = []
   type        = any
@@ -396,67 +396,67 @@ variable vpc_links {
 
   // vpc_link_name
   validation {
-    condition     = var.vpc_links != [] ? ! can(index([for vpc_link in var.vpc_links : can(lookup(vpc_link, "vpc_link_name")) ? length(lookup(vpc_link, "vpc_link_name")) > 1 : false], false)) : true
+    condition     = var.vpc_links != [] ? !can(index([for vpc_link in var.vpc_links : can(lookup(vpc_link, "vpc_link_name")) ? length(lookup(vpc_link, "vpc_link_name")) > 1 : false], false)) : true
     error_message = "If the set of 'vpc_links' is provided, each value must contain an attribute 'vpc_link_name' with length > 1."
   }
 
   // vpc_link_description
   validation {
-    condition     = var.vpc_links != [] ? ! can(index([for vpc_link in var.vpc_links : length(lookup(vpc_link, "vpc_link_description")) > 1], false)) : true
+    condition     = var.vpc_links != [] ? !can(index([for vpc_link in var.vpc_links : length(lookup(vpc_link, "vpc_link_description")) > 1], false)) : true
     error_message = "Optional attribute 'vpc_link_description' of 'vpc_links' must be a string if specified with length > 1."
   }
 
   // target_arns
   validation {
-    condition     = var.vpc_links != [] ? ! can(index([for vpc_link in var.vpc_links : length(try(toset(vpc_link.target_arns), [])) == 1], false)) : true
+    condition     = var.vpc_links != [] ? !can(index([for vpc_link in var.vpc_links : length(try(toset(vpc_link.target_arns), [])) == 1], false)) : true
     error_message = "Required attribute 'target_arns' of 'vpc_links' must be a set of at least one string."
   }
 }
 
-variable api_gateway_responses_default {
-  type    = any
-  default = [ 
+variable "api_gateway_responses_default" {
+  type = any
+  default = [
     {
-      response_type = "DEFAULT_4XX"
+      response_type       = "DEFAULT_4XX"
       response_parameters = {}
-      status_code   = null
-      response_templates = {}
+      status_code         = null
+      response_templates  = {}
     },
     {
-      response_type = "DEFAULT_5XX"
+      response_type       = "DEFAULT_5XX"
       response_parameters = {}
-      status_code   = null
-      response_templates = {}
+      status_code         = null
+      response_templates  = {}
     },
   ]
 }
 
-variable api_gateway_responses {
-  type = any
+variable "api_gateway_responses" {
+  type    = any
   default = []
   // response_type
   validation {
-    condition     = var.api_gateway_responses != [] ? ! can(index([for api_gateway_response in var.api_gateway_responses : can(lookup(api_gateway_response, "response_type")) ? length(lookup(api_gateway_response, "response_type")) > 1 : false], false)) : true
+    condition     = var.api_gateway_responses != [] ? !can(index([for api_gateway_response in var.api_gateway_responses : can(lookup(api_gateway_response, "response_type")) ? length(lookup(api_gateway_response, "response_type")) > 1 : false], false)) : true
     error_message = "If the set of 'api_gateway_responses' is provided, each value must contain an attribute 'response_type' with length > 1."
   }
   // response_parameters
   validation {
-    condition     = var.api_gateway_responses != [] ? ! can(index([for api_gateway_response in var.api_gateway_responses : length(lookup(api_gateway_response, "api_gateway_responses")) > 1], false)) : true
+    condition     = var.api_gateway_responses != [] ? !can(index([for api_gateway_response in var.api_gateway_responses : length(lookup(api_gateway_response, "api_gateway_responses")) > 1], false)) : true
     error_message = "Optional attribute 'response_parameters' of 'api_gateway_responses' must be a map if specified with length > 1."
   }
   // status_code
   validation {
-    condition     = var.api_gateway_responses != [] ? ! can(index([for api_gateway_response in var.api_gateway_responses : length(lookup(api_gateway_response, "status_code")) > 1], false)) : true
+    condition     = var.api_gateway_responses != [] ? !can(index([for api_gateway_response in var.api_gateway_responses : length(lookup(api_gateway_response, "status_code")) > 1], false)) : true
     error_message = "Optional attribute 'status_code' of 'api_gateway_responses' must be a string if specified with length > 1."
   }
   // response_template
   validation {
-    condition     = var.api_gateway_responses != [] ? ! can(index([for api_gateway_response in var.api_gateway_responses : length(lookup(api_gateway_response, "response_template")) > 1], false)) : true
+    condition     = var.api_gateway_responses != [] ? !can(index([for api_gateway_response in var.api_gateway_responses : length(lookup(api_gateway_response, "response_template")) > 1], false)) : true
     error_message = "Optional attribute 'response_template' of 'api_gateway_responses' must be a map if specified with length > 1."
   }
 }
 
-variable authorizer_definition_default {
+variable "authorizer_definition_default" {
   description = "AWS API Gateway authorizer default."
   type        = any
 
@@ -472,7 +472,7 @@ variable authorizer_definition_default {
   }
 }
 
-variable authorizer_definitions {
+variable "authorizer_definitions" {
   description = "AWS API Gateway authorizer."
   default     = []
   type        = any
@@ -492,51 +492,51 @@ variable authorizer_definitions {
 
   // authoizer_name
   validation {
-    condition     = var.authorizer_definitions != [] ? ! can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_name")) ? length(lookup(auth, "authorizer_name")) > 1 : false], false)) : true
+    condition     = var.authorizer_definitions != [] ? !can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_name")) ? length(lookup(auth, "authorizer_name")) > 1 : false], false)) : true
     error_message = "If the set of 'authorizer_definitions' is provided, each value must contain an attribute 'authorizer_name' with length > 1."
   }
 
   // authoizer_uri
   validation {
-    condition     = var.authorizer_definitions != [] ? ! can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_uri")) ? length(lookup(auth, "authorizer_uri")) > 1 : false], false)) : true
+    condition     = var.authorizer_definitions != [] ? !can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_uri")) ? length(lookup(auth, "authorizer_uri")) > 1 : false], false)) : true
     error_message = "If the set of 'authorizer_definitions' is provided, each value must contain an attribute 'authorizer_uri' with length > 1."
   }
 
   // identity_source
   validation {
-    condition     = var.authorizer_definitions != [] ? ! can(index([for auth in var.authorizer_definitions : length(lookup(auth, "identity_source")) > 1], false)) : true
+    condition     = var.authorizer_definitions != [] ? !can(index([for auth in var.authorizer_definitions : length(lookup(auth, "identity_source")) > 1], false)) : true
     error_message = "Optional attribute 'identity_source' of 'authorizer_definitions' must be a string if specified with length > 1."
   }
 
   // authorizer_type
   validation {
-    condition     = var.authorizer_definitions != [] ? ! can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_type")) ? ! contains(["TOKEN", "REQUEST"], lookup(auth, "authorizer_type")) : false], true)) : true
+    condition     = var.authorizer_definitions != [] ? !can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_type")) ? !contains(["TOKEN", "REQUEST"], lookup(auth, "authorizer_type")) : false], true)) : true
     error_message = "Optional attribute 'authorizer_type' of 'authorizer_definitions' must be a string equal to 'TOKEN' or 'REQUEST'."
   }
 
   // authorizer_credentials
   validation {
-    condition     = var.authorizer_definitions != [] ? ! can(index([for auth in var.authorizer_definitions : length(lookup(auth, "authorizer_credentials")) > 1], false)) : true
+    condition     = var.authorizer_definitions != [] ? !can(index([for auth in var.authorizer_definitions : length(lookup(auth, "authorizer_credentials")) > 1], false)) : true
     error_message = "Optional attribute 'authorizer_credentials' of 'authorizer_definitions' must be a string if specified with length > 1."
   }
 
   // authorizer_result_ttl_in_seconds
   validation {
 
-    condition     = var.authorizer_definitions != [] ? ! can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_result_ttl_in_seconds")) ? tonumber(lookup(auth, "authorizer_result_ttl_in_seconds")) >= 0 && tonumber(lookup(auth, "authorizer_result_ttl_in_seconds")) <= 3600 : true], false)) : true
+    condition     = var.authorizer_definitions != [] ? !can(index([for auth in var.authorizer_definitions : can(lookup(auth, "authorizer_result_ttl_in_seconds")) ? tonumber(lookup(auth, "authorizer_result_ttl_in_seconds")) >= 0 && tonumber(lookup(auth, "authorizer_result_ttl_in_seconds")) <= 3600 : true], false)) : true
     error_message = "Optional attribute 'authorizer_result_ttl_in_seconds' of 'authorizer_definitions' must be a number in range 0 - 3600."
   }
 
   // identity_validation_expression
   validation {
-    condition     = var.authorizer_definitions != [] ? ! can(index([for auth in var.authorizer_definitions : length(lookup(auth, "identity_validation_expression")) > 1], false)) : true
+    condition     = var.authorizer_definitions != [] ? !can(index([for auth in var.authorizer_definitions : length(lookup(auth, "identity_validation_expression")) > 1], false)) : true
     error_message = "Optional attribute 'identity_validation_expression' of 'authorizer_definitions' must be a string if specified with length > 1."
   }
 
   // provider_arns
   validation {
     condition = (var.authorizer_definitions != [] ?
-      ! can(index(
+      !can(index(
         [for auth in var.authorizer_definitions :
           can(auth.provider_arns) ?
         can(toset(auth.provider_arns)) : true]
@@ -546,7 +546,7 @@ variable authorizer_definitions {
   }
 }
 
-variable api_gateway_method_default {
+variable "api_gateway_method_default" {
   description = "AWS API Gateway methods default."
   type        = any
 
@@ -569,7 +569,7 @@ variable api_gateway_method_default {
   }
 }
 
-variable method_integration_default {
+variable "method_integration_default" {
   type = any
   default = {
     integration_http_method = "POST"
@@ -591,7 +591,7 @@ variable method_integration_default {
   }
 }
 
-variable method_response_default {
+variable "method_response_default" {
   type = any
   default = {
     status_code   = "200"
@@ -606,7 +606,7 @@ variable method_response_default {
   }
 }
 
-variable method_integration_response_default {
+variable "method_integration_response_default" {
   type = any
   default = {
     status_code       = "200"
@@ -618,7 +618,7 @@ variable method_integration_response_default {
   }
 }
 
-variable api_gateway_options_default {
+variable "api_gateway_options_default" {
   description = "AWS API Gateway options default."
   type        = any
   default = {
@@ -640,7 +640,7 @@ variable api_gateway_options_default {
   }
 }
 
-variable options_integration_default {
+variable "options_integration_default" {
   type = any
   default = {
     integration_http_method = null
@@ -662,7 +662,7 @@ variable options_integration_default {
   }
 }
 
-variable options_response_default {
+variable "options_response_default" {
   type = any
   default = {
     status_code = "200"
@@ -677,7 +677,7 @@ variable options_response_default {
   }
 }
 
-variable options_integration_response_default {
+variable "options_integration_response_default" {
   type = any
   default = {
     status_code       = "200"
@@ -691,21 +691,21 @@ variable options_integration_response_default {
   }
 }
 
-variable api_gateway_methods {
+variable "api_gateway_methods" {
   description = "AWS API Gateway methods."
   default     = []
   type        = any
 
   // resource_path
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method, "resource_path")) ? length(lookup(method, "resource_path")) > 1 && lookup(method, "resource_path") : false], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method, "resource_path")) ? length(lookup(method, "resource_path")) > 1 && lookup(method, "resource_path") : false], false)) : true
     error_message = "If the set of 'api_gateway_methods' is provided, each value must contain an attribute 'resource_path' with length > 1."
   }
 
   // api_method.http_method
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(lookup(method.api_method, "http_method")) ?
           contains(["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "ANY"], lookup(method.api_method, "http_method")) : # if can find http_method true
@@ -717,56 +717,56 @@ variable api_gateway_methods {
 
   // api_method.authorization     
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.api_method.authorization) ? contains(["NONE", "CUSTOM", "AWS_IAM", "COGNITO_USER_POOLS"], lookup(method.api_method, "authorization")) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.api_method.authorization) ? contains(["NONE", "CUSTOM", "AWS_IAM", "COGNITO_USER_POOLS"], lookup(method.api_method, "authorization")) : true], false)) : true
     error_message = "Optional attribute 'authorization' of 'api_gateway_methods.api_method' must be a string equal to NONE, CUSTOM, AWS_IAM, COGNITO_USER_POOLS."
   }
 
   // api_method.authorizer_id
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.api_method.authorizer_id) ? length(lookup(method.api_method, "authorizer_id")) > 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.api_method.authorizer_id) ? length(lookup(method.api_method, "authorizer_id")) > 1 : true], false)) : true
     error_message = "Optional attribute 'authorizer_id' of 'api_gateway_methods.api_method' must be a string with length > 1."
   }
 
   // api_method.authorization_scopes
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.api_method.authorization_scopes) ? length(try(toset(method.api_method.authorization_scopes), [])) == 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.api_method.authorization_scopes) ? length(try(toset(method.api_method.authorization_scopes), [])) == 1 : true], false)) : true
     error_message = "Optional attribute 'authorization_scopes' of 'api_gateway_methods.api_method' must be a set of string with length > 1."
   }
 
   // api_method.api_key_required
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.api_method.api_key_required) ? can(tobool(lookup(method.api_method, "api_key_required"))) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.api_method.api_key_required) ? can(tobool(lookup(method.api_method, "api_key_required"))) : true], false)) : true
     error_message = "Optional attribute 'api_key_required' of 'api_gateway_methods.api_method' must be 'true' or 'false'."
   }
 
   // api_method.request_models
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "request_models")) ? can(tomap(lookup(method.api_method, "request_models"))) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "request_models")) ? can(tomap(lookup(method.api_method, "request_models"))) : true], false)) : true
     error_message = "Optional attribute 'request_models' of 'api_gateway_methods.api_method' must be an object map."
   }
 
   // api_method.request_validator_id
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "request_validator_id")) ? length(lookup(method.api_method, "request_validator_id")) > 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "request_validator_id")) ? length(lookup(method.api_method, "request_validator_id")) > 1 : true], false)) : true
     error_message = "Optional attribute 'request_validator_id' of 'api_gateway_methods.api_method' must be a string with length > 1."
   }
 
   // api_method.request_parameters
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "request_parameters")) ? can(tomap(lookup(method.api_method, "request_parameters"))) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "request_parameters")) ? can(tomap(lookup(method.api_method, "request_parameters"))) : true], false)) : true
     error_message = "Optional attribute 'request_parameters' of 'api_gateway_methods.api_method' must be an object map."
   }
 
   // api_method.authorizer_name
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "authorizer_name")) ? length(lookup(method.api_method, "authorizer_name")) > 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "authorizer_name")) ? length(lookup(method.api_method, "authorizer_name")) > 1 : true], false)) : true
     error_message = "Optional attribute 'authorizer_name' of 'api_gateway_methods.api_method' must be a string with length > 1."
   }
 
   // api_method.integration.integration_http_method
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.integration_http_method) ?
@@ -781,7 +781,7 @@ variable api_gateway_methods {
   // api_method.integration.integration_type
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.integration_type) ?
@@ -796,7 +796,7 @@ variable api_gateway_methods {
   // api_method.integration.connection_type
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.connection_type) ?
@@ -811,7 +811,7 @@ variable api_gateway_methods {
   // api_method.integration.connection_id
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.connection_id) ?
@@ -826,7 +826,7 @@ variable api_gateway_methods {
   // api_method.integration.uri
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.integration.uri) ?
@@ -841,7 +841,7 @@ variable api_gateway_methods {
   // api_method.integration.credentials
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.credentials) ?
@@ -856,7 +856,7 @@ variable api_gateway_methods {
   // api_method.integration.request_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.request_parameters) ?
@@ -871,7 +871,7 @@ variable api_gateway_methods {
   // api_method.integration.request_templates
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.request_templates) ?
@@ -886,7 +886,7 @@ variable api_gateway_methods {
   // api_method.integration.passthrough_behavior
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.passthrough_behavior) ?
@@ -901,7 +901,7 @@ variable api_gateway_methods {
   // api_method.integration.cache_key_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.cache_key_parameters) ?
@@ -916,7 +916,7 @@ variable api_gateway_methods {
   // api_method.integration.cache_namespace
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.cache_namespace) ?
@@ -931,7 +931,7 @@ variable api_gateway_methods {
   // api_method.integration.content_handling
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.integration.content_handling) ?
@@ -946,7 +946,7 @@ variable api_gateway_methods {
   // api_method.integration.timeout_milliseconds
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration) ?
           can(method.api_method.integration.timeout_milliseconds) ?
@@ -961,7 +961,7 @@ variable api_gateway_methods {
   // api_method.integration_response.response_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration_response) ?
           can(method.api_method.integration_response.response_parameters) ?
@@ -976,7 +976,7 @@ variable api_gateway_methods {
   // api_method.integration_response.response_templates
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration_response) ?
           can(method.api_method.integration_response.response_templates) ?
@@ -991,7 +991,7 @@ variable api_gateway_methods {
   // api_method.integration_response.response_templates
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.api_method.integration_response) ?
           can(method.api_method.integration_response.content_handling) ?
@@ -1006,7 +1006,7 @@ variable api_gateway_methods {
   // api_method.response.status_code
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         [for method in var.api_gateway_methods : can(method.api_method.response) ?
           can(method.api_method.response.status_code) ?
           can(tostring(method.api_method.response.status_code)) && length(method.api_method.response.status_code) > 1 : # the validation
@@ -1020,7 +1020,7 @@ variable api_gateway_methods {
   // api_method.response.response_models
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         [for method in var.api_gateway_methods : can(method.api_method.response) ?
           can(method.api_method.response.response_models) ?
           can(tomap(method.api_method.response.response_models)) && length(method.api_method.response.response_models) > 0 : # the validation
@@ -1034,7 +1034,7 @@ variable api_gateway_methods {
   // api_method.response.response_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         [for method in var.api_gateway_methods : can(method.api_method.response) ?
           can(method.api_method.response.response_parameters) ?
           can(tomap(method.api_method.response.response_parameters)) && length(method.api_method.response.response_parameters) > 0 : # the validation
@@ -1051,7 +1051,7 @@ variable api_gateway_methods {
   // options_method.http_method
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(lookup(method.options_method, "http_method")) ?
           contains(["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "ANY"], lookup(method.options_method, "http_method")) : # if can find http_method true
@@ -1063,56 +1063,56 @@ variable api_gateway_methods {
 
   // options_method.authorization     
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.options_method.authorization) ? contains(["NONE", "CUSTOM", "AWS_IAM", "COGNITO_USER_POOLS"], lookup(method.options_method, "authorization")) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.options_method.authorization) ? contains(["NONE", "CUSTOM", "AWS_IAM", "COGNITO_USER_POOLS"], lookup(method.options_method, "authorization")) : true], false)) : true
     error_message = "Optional attribute 'authorization' of 'api_gateway_methods.options_method' must be a string equal to NONE, CUSTOM, AWS_IAM, COGNITO_USER_POOLS."
   }
 
   // options_method.authorizer_id
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.options_method.authorizer_id) ? length(lookup(method.options_method, "authorizer_id")) > 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.options_method.authorizer_id) ? length(lookup(method.options_method, "authorizer_id")) > 1 : true], false)) : true
     error_message = "Optional attribute 'authorizer_id' of 'api_gateway_methods.options_method' must be a string with length > 1."
   }
 
   // options_method.authorization_scopes
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.options_method.authorization_scopes) ? length(try(toset(method.options_method.authorization_scopes), [])) == 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.options_method.authorization_scopes) ? length(try(toset(method.options_method.authorization_scopes), [])) == 1 : true], false)) : true
     error_message = "Optional attribute 'authorization_scopes' of 'api_gateway_methods.options_method' must be a set of string with length > 1."
   }
 
   // options_method.api_key_required
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(method.options_method.api_key_required) ? can(tobool(lookup(method.options_method, "api_key_required"))) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(method.options_method.api_key_required) ? can(tobool(lookup(method.options_method, "api_key_required"))) : true], false)) : true
     error_message = "Optional attribute 'api_key_required' of 'api_gateway_methods.options_method' must be 'true' or 'false'."
   }
 
   // options_method.request_models
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "request_models")) ? can(tomap(lookup(method.options_method, "request_models"))) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "request_models")) ? can(tomap(lookup(method.options_method, "request_models"))) : true], false)) : true
     error_message = "Optional attribute 'request_models' of 'api_gateway_methods.options_method' must be an object map."
   }
 
   // options_method.request_validator_id
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "request_validator_id")) ? length(lookup(method.options_method, "request_validator_id")) > 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "request_validator_id")) ? length(lookup(method.options_method, "request_validator_id")) > 1 : true], false)) : true
     error_message = "Optional attribute 'request_validator_id' of 'api_gateway_methods.options_method' must be a string with length > 1."
   }
 
   // options_method.request_parameters
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "request_parameters")) ? can(tomap(lookup(method.options_method, "request_parameters"))) : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "request_parameters")) ? can(tomap(lookup(method.options_method, "request_parameters"))) : true], false)) : true
     error_message = "Optional attribute 'request_parameters' of 'api_gateway_methods.options_method' must be an object map."
   }
 
   // options_method.authorizer_name
   validation {
-    condition     = var.api_gateway_methods != [] ? ! can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "authorizer_name")) ? length(lookup(method.options_method, "authorizer_name")) > 1 : true], false)) : true
+    condition     = var.api_gateway_methods != [] ? !can(index([for method in var.api_gateway_methods : can(lookup(method.options_method, "authorizer_name")) ? length(lookup(method.options_method, "authorizer_name")) > 1 : true], false)) : true
     error_message = "Optional attribute 'authorizer_name' of 'api_gateway_methods.options_method' must be a string with length > 1."
   }
 
   // options_method.integration.integration_http_method
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.integration_http_method) ?
@@ -1127,7 +1127,7 @@ variable api_gateway_methods {
   // options_method.integration.integration_type
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.integration_type) ?
@@ -1142,7 +1142,7 @@ variable api_gateway_methods {
   // options_method.integration.connection_type
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.connection_type) ?
@@ -1157,7 +1157,7 @@ variable api_gateway_methods {
   // options_method.integration.connection_id
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.connection_id) ?
@@ -1172,7 +1172,7 @@ variable api_gateway_methods {
   // options_method.integration.uri
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.integration.uri) ?
@@ -1187,7 +1187,7 @@ variable api_gateway_methods {
   // options_method.integration.credentials
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.credentials) ?
@@ -1202,7 +1202,7 @@ variable api_gateway_methods {
   // options_method.integration.request_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.request_parameters) ?
@@ -1217,7 +1217,7 @@ variable api_gateway_methods {
   // options_method.integration.request_templates
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.request_templates) ?
@@ -1232,7 +1232,7 @@ variable api_gateway_methods {
   // options_method.integration.passthrough_behavior
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.passthrough_behavior) ?
@@ -1247,7 +1247,7 @@ variable api_gateway_methods {
   // options_method.integration.cache_key_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.cache_key_parameters) ?
@@ -1262,7 +1262,7 @@ variable api_gateway_methods {
   // options_method.integration.cache_namespace
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.cache_namespace) ?
@@ -1277,7 +1277,7 @@ variable api_gateway_methods {
   // options_method.integration.content_handling
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.integration.content_handling) ?
@@ -1292,7 +1292,7 @@ variable api_gateway_methods {
   // options_method.integration.timeout_milliseconds
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration) ?
           can(method.options_method.integration.timeout_milliseconds) ?
@@ -1307,7 +1307,7 @@ variable api_gateway_methods {
   // options_method.integration_response.response_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration_response) ?
           can(method.options_method.integration_response.response_parameters) ?
@@ -1322,7 +1322,7 @@ variable api_gateway_methods {
   // options_method.integration_response.response_templates
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration_response) ?
           can(method.options_method.integration_response.response_templates) ?
@@ -1337,7 +1337,7 @@ variable api_gateway_methods {
   // options_method.integration_response.response_templates
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         # build an array of true/false values describing if the validation is passed for each record...  if 'false' found via the index function, return false
         [for method in var.api_gateway_methods : can(method.options_method.integration_response) ?
           can(method.options_method.integration_response.content_handling) ?
@@ -1352,7 +1352,7 @@ variable api_gateway_methods {
   // options_method.response.status_code
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         [for method in var.api_gateway_methods : can(method.options_method.response) ?
           can(method.options_method.response.status_code) ?
           can(tostring(method.options_method.response.status_code)) && length(method.options_method.response.status_code) > 1 : # the validation
@@ -1366,7 +1366,7 @@ variable api_gateway_methods {
   // options_method.response.response_models
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         [for method in var.api_gateway_methods : can(method.options_method.response) ?
           can(method.options_method.response.response_models) ?
           can(tomap(method.options_method.response.response_models)) && length(method.options_method.response.response_models) > 0 : # the validation
@@ -1380,7 +1380,7 @@ variable api_gateway_methods {
   // options_method.response.response_parameters
   validation {
     condition = (var.api_gateway_methods != [] ?
-      ! can(index(
+      !can(index(
         [for method in var.api_gateway_methods : can(method.options_method.response) ?
           can(method.options_method.response.response_parameters) ?
           can(tomap(method.options_method.response.response_parameters)) && length(method.options_method.response.response_parameters) > 0 : # the validation
@@ -1392,8 +1392,8 @@ variable api_gateway_methods {
   }
 }
 
-variable cors_origin_domain {
-  type    = string
+variable "cors_origin_domain" {
+  type        = string
   description = "The domain of the site that is calling this api.  e.g. https://bitlocker.pgcloud.com"
-  default = ""
+  default     = ""
 }

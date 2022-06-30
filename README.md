@@ -1,15 +1,15 @@
 <h1 align="center">
-    terraform-module-aws-api-gateway
+    terraform-aws-api-gateway-v1
 </h1>
 
 <p align="center" style="font-size: 1.2rem;"> 
-    Terraform module to create an AWS API Gateway and related objects.
+    Terraform module to create an AWS API Gateway V1 and related objects.
 </p>
 
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v0.13-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v1.1.0-green" alt="Terraform">
 </a>
 
 </p>
@@ -18,13 +18,13 @@
 
 This module has the following dependencies: 
 
-- [Terraform 0.13](https://learn.hashicorp.com/terraform/getting-started/install.html)
-- Hashicorp AWS Provider ~> 3.0
+- [Terraform 1.1.0](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- Hashicorp AWS Provider ~> 4.0
 
 ## Limitations/TODOs
 
 - Currently this module only supports resource paths nested 5 levels deep, e.g. "endpoint/one/two/three/four/five".  Adding additional levels is trivial if the use case ever arises.  Stopping at 5 for now to keep the code more concise.
-- Terraform 0.14 will introduce functions 'alltrue' and 'anytrue' functions which will be able to replace the 'index' calls in the validations.  This will make that section much easier to follow.  In addition, the experiment 'module_variable_optional_attrs' may allow us to type the complex variable objects which as of now are only type 'any'.  Terraform 0.15 will further enhance the 'module_variable_optional_attrs' experiment as follows:
+- Terraform 0.14 introduced functions 'alltrue' and 'anytrue' functions which will be able to replace the 'index' calls in the validations.  This will make that section much easier to follow.  In addition, the experiment 'module_variable_optional_attrs' may allow us to type the complex variable objects which as of now are only type 'any'.  Terraform 0.15 will further enhance the 'module_variable_optional_attrs' experiment as follows:
     > EXPERIMENTS:
     > 
     > Continuing the module_variable_optional_attrs experiment started in v0.14.0, there is now an experimental defaults function intended for use with it, to allow for concisely defining and merging in default values for any unset optional attributes in a deep data structure. The function is callable only  when the module_variable_optional_attrs experiment is available, because it's intended for use only with incoming variable values that might have certain attributes unset.
@@ -35,7 +35,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Basic Example
 ```hcl
   module "api_gateway" {
-    source = "git@github.com:procter-gamble/terraform-module-aws-api-gateway"
+    source = "git@github.com:mondelez-ctiso/terraform-aws-api-gateway-v1"
     providers = { aws = aws }
 
     api_gateway = {
@@ -64,7 +64,7 @@ Here are some examples of how you can use this module in your inventory structur
   # API Gateway
   ###################
   module "api_gateway" {
-    source    = "git@github.com:procter-gamble/terraform-module-aws-api-gateway"
+    source = "git@github.com:mondelez-ctiso/terraform-aws-api-gateway-v1"
     providers = { aws = aws }
 
     tags = var.tags
@@ -128,7 +128,7 @@ Here are some examples of how you can use this module in your inventory structur
   # API Gateway
   ###################
   module "api_gateway" {
-    source    = "git@github.com:procter-gamble/terraform-module-aws-api-gateway"
+    source = "git@github.com:mondelez-ctiso/terraform-aws-api-gateway-v1"
     providers = { aws = aws }
 
     tags = var.tags
