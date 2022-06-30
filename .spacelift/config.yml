@@ -4,7 +4,6 @@ version: 1
 module_version: 1.0.0
 test_defaults:
   before_plan:
-    - terraform init -upgrade
     - cp -a /mnt/workspace/source/examples/test_infrastructure/additional_outputs/. ../../  
   # after_apply:
   #   - >
