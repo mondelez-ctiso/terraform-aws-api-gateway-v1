@@ -1,9 +1,9 @@
 resource "local_file" "outputs" {
-    content  = jsonencode(module.api_gateway.locals)
+    content  = jsonencode(local.value)
     filename = "${path.module}/locals.json"
 }
 
-output "locals" {
+locals {
   value = {
     api_gateway                          = local.api_gateway
     api_gateway_stages                   = local.api_gateway_stages
