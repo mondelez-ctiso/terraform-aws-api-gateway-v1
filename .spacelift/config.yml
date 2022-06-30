@@ -2,9 +2,9 @@
 version: 1
 # Your module version - must be changed to release a new version
 module_version: 1.0.0
-test_defaults:
-  before_plan:
-    - cp -a /mnt/workspace/source/examples/test_infrastructure/additional_outputs/. ../../  
+# test_defaults:
+#   before_plan:
+#     - cp -a /mnt/workspace/source/examples/test_infrastructure/additional_outputs/. ../../  
   # after_apply:
   #   - >
   #     exit_code=0;
@@ -16,8 +16,8 @@ test_defaults:
   #       fi;
   #     done;
   #     exit $exit_code;
-  environment:
-    AWS_REGION: us-east-2
-tests:
-  - name: Simple API GatewayV1 Test
-    project_root: examples/simple
+#   environment:
+#     AWS_REGION: us-east-2
+# tests:
+#   - name: Simple API GatewayV1 Test
+#     project_root: examples/simple
