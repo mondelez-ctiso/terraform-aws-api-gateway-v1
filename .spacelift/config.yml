@@ -7,17 +7,17 @@ test_defaults:
     - pwd
     - cp -a /mnt/workspace/source/examples/test_infrastructure/additional_outputs/. ../../  
     - ls -la
-  after_apply:
-    - >
-      exit_code=0;
-      for file in $(ls -1 expected/); do
-        cat expected/$file | jq --sort-keys > jq_expected_$file;
-        cat produced_$file | jq --sort-keys > jq_produced_$file;
-        if ! diff <(sed '/"myPath": /,/uri/d' jq_expected_$file) <(sed '/"myPath": /,/uri/d' jq_produced_$file); then
-          exit_code=1;
-        fi;
-      done;
-      exit $exit_code;
+  # after_apply:
+  #   - >
+  #     exit_code=0;
+  #     for file in $(ls -1 expected/); do
+  #       cat expected/$file | jq --sort-keys > jq_expected_$file;
+  #       cat produced_$file | jq --sort-keys > jq_produced_$file;
+  #       if ! diff <(sed '/"myPath": /,/uri/d' jq_expected_$file) <(sed '/"myPath": /,/uri/d' jq_produced_$file); then
+  #         exit_code=1;
+  #       fi;
+  #     done;
+  #     exit $exit_code;
   environment:
     AWS_REGION: us-east-2
 tests:
