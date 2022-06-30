@@ -1,6 +1,6 @@
 resource "local_file" "outputs" {
-    content  = jsonencode(local.value)
-    filename = "${path.module}/locals.json"
+  content  = jsonencode(local.value)
+  filename = "${path.module}/locals.json"
 }
 
 locals {
