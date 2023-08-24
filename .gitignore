@@ -1,3 +1,8 @@
+# Prevent vscode sops plugin auto-decrypted files from getting checked in if they are open
+*.decrypted~*
+
+# Sourced from https://github.com/github/gitignore/blob/main/Terraform.gitignore
+
 # Local .terraform directories
 **/.terraform/*
 
@@ -7,12 +12,7 @@
 
 # Crash log files
 crash.log
-
-# Ignore any .tfvars files that are generated automatically for each Terraform run. Most
-# .tfvars files are managed as part of configuration and so should be included in
-# version control.
-#
-# example.tfvars
+crash.*.log
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
@@ -27,3 +27,7 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc

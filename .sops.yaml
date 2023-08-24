@@ -1,0 +1,8 @@
+# creation rules are evaluated sequentially, the first match wins
+creation_rules:
+  - path_regex: \.modules.yaml$
+    key_groups:
+    - kms:
+      - arn: "arn:aws:kms:us-east-2:665201433373:alias/mdlz/sops"
+        context:
+          AccountID: "413186249321"

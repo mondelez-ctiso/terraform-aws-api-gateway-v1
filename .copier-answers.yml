@@ -1,0 +1,18 @@
+# Changes here will be overwritten by Copier
+_src_path: ../copier-templates/default-template
+account_owner: zachary.wolfgang@mdlz.com
+application_name: API Gateway V1 Module
+stage_map:
+    modules:
+        account_id: '413186249321'
+        spacelift_modules: []
+        spacelift_stacks: []
+stage_permission_set_group_map:
+    modules:
+        MdlzAccountBilling: AWS API Gateway V1 Module MODULES MdlzAccountBilling
+        MdlzAccountDeveloper: AWS API Gateway V1 Module MODULES MdlzAccountDeveloper
+        MdlzAccountOperator: AWS API Gateway V1 Module MODULES MdlzAccountOperator
+        MdlzAccountReadOnly: AWS API Gateway V1 Module MODULES MdlzAccountReadOnly
+        MdlzDevOpsContributor: AWS API Gateway V1 Module MODULES MdlzDevOpsContributor
+        MdlzDevOpsOwner: AWS API Gateway V1 Module MODULES MdlzDevOpsOwner
+this_github_repo: terraform-aws-api-gateway-v1
