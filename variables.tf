@@ -198,7 +198,7 @@ variable "api_gateway_stage_default" {
     stage_description     = "Managed by terraform-aws-api-gateway-v1 module"
     stage_variables       = null
     xray_tracing_enabled  = false
-    waf_id                = null
+    web_acl_arn           = null
   }
 }
 
@@ -271,10 +271,10 @@ variable "api_gateway_stages" {
     error_message = "Optional attribute 'xray_tracing_enabled' of 'api_gateway_stages' must be 'true' or 'false'."
   }
 
-  // waf_id
+  // web_acl_arn
   validation {
-    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : length(lookup(stage, "waf_id")) > 1], false)) : true
-    error_message = "Optional attribute 'waf_id' of 'api_gateway_stages' must be a string if specified with length > 1."
+    condition     = var.api_gateway_stages != [] ? !can(index([for stage in var.api_gateway_stages : length(lookup(stage, "web_acl_arn")) > 1], false)) : false
+    error_message = "Attribute 'web_acl_arn' of 'api_gateway_stages' must be a string with length > 1."
   }
 
   // TODO: access_log_settings
