@@ -84,6 +84,10 @@ resource "aws_api_gateway_deployment" "default" {
   }
 
   depends_on = [aws_api_gateway_method.default, aws_api_gateway_integration.default]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Resource    : Api Gateway Stage
