@@ -1,4 +1,4 @@
-# Resource    : API Gateway 
+# Resource    : API Gateway
 # Description : Terraform resource to create an API Gateway REST API on AWS.
 resource "aws_api_gateway_rest_api" "default" {
   for_each = var.api_gateway != null ? { for gw in [local.api_gateway] : gw.name => gw } : {}
