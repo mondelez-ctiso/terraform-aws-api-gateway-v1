@@ -2,7 +2,7 @@
     terraform-aws-api-gateway-v1
 </h1>
 
-<p align="center" style="font-size: 1.2rem;"> 
+<p align="center" style="font-size: 1.2rem;">
     Terraform module to create an AWS API Gateway V1 and related objects.
 </p>
 
@@ -16,7 +16,7 @@
 
 ## Prerequisites
 
-This module has the following dependencies: 
+This module has the following dependencies:
 
 - [Terraform 1.1.0](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - Hashicorp AWS Provider ~> 4.0
@@ -26,7 +26,7 @@ This module has the following dependencies:
 - Currently this module only supports resource paths nested 5 levels deep, e.g. "endpoint/one/two/three/four/five".  Adding additional levels is trivial if the use case ever arises.  Stopping at 5 for now to keep the code more concise.
 - Terraform 0.14 introduced functions 'alltrue' and 'anytrue' functions which will be able to replace the 'index' calls in the validations.  This will make that section much easier to follow.  In addition, the experiment 'module_variable_optional_attrs' may allow us to type the complex variable objects which as of now are only type 'any'.  Terraform 0.15 will further enhance the 'module_variable_optional_attrs' experiment as follows:
     > EXPERIMENTS:
-    > 
+    >
     > Continuing the module_variable_optional_attrs experiment started in v0.14.0, there is now an experimental defaults function intended for use with it, to allow for concisely defining and merging in default values for any unset optional attributes in a deep data structure. The function is callable only  when the module_variable_optional_attrs experiment is available, because it's intended for use only with incoming variable values that might have certain attributes unset.
 
 ## Examples
@@ -37,7 +37,7 @@ Here are some examples of how you can use this module in your inventory structur
   module "api_gateway" {
     source  = "spacelift.io/mondelez-ctiso/terraform-aws-api-gateway-v1/aws"
     version = "1.0.0"
-    
+
     providers = { aws = aws }
 
     api_gateway = {
@@ -68,7 +68,7 @@ Here are some examples of how you can use this module in your inventory structur
   module "api_gateway" {
     source  = "spacelift.io/mondelez-ctiso/terraform-aws-api-gateway-v1/aws"
     version = "1.0.0"
-    
+
     providers = { aws = aws }
 
     tags = var.tags
@@ -136,7 +136,7 @@ Here are some examples of how you can use this module in your inventory structur
   module "api_gateway" {
     source  = "spacelift.io/mondelez-ctiso/terraform-aws-api-gateway-v1/aws"
     version = "1.0.0"
-    
+
     providers = { aws = aws }
 
     tags = var.tags
@@ -182,7 +182,7 @@ Here are some examples of how you can use this module in your inventory structur
     depends_on = [module.acm_cert]
   }
 
-  # module "" 
+  # module ""
   module "lambda_security_group" {
     source  = "terraform-aws-modules/security-group/aws"
     version = "~> 3.0"
@@ -221,12 +221,12 @@ Here are some examples of how you can use this module in your inventory structur
     vpc_subnet_ids        = ["subnet-id"]
     vpc_security_group_ids = [module.lambda_security_group.this_security_group_id]
 
-    kms_key_arn = module.kms.arn 
+    kms_key_arn = module.kms.arn
 
     environment_variables = {
       ORIGIN = var.cors_origin_domain
     }
-    
+
     ######################
     # Additional policies
     ######################
@@ -243,7 +243,7 @@ Here are some examples of how you can use this module in your inventory structur
               "secretsmanager:DescribeSecret",
               "secretsmanager:ListSecretVersionIds"
             ],
-            "Resource" : [module.secret.arn] 
+            "Resource" : [module.secret.arn]
           },
           {
             "Effect" : "Allow",
@@ -251,7 +251,7 @@ Here are some examples of how you can use this module in your inventory structur
               "kms:Decrypt",
               "kms:DescribeKey",
             ],
-            "Resource" : [module.kms.arn] 
+            "Resource" : [module.kms.arn]
           }
         ]
     })
@@ -267,7 +267,7 @@ Here are some examples of how you can use this module in your inventory structur
   module "ping_authorizer" {
     source  = "terraform-aws-modules/lambda/aws"
     version = "3.3.1"
-    
+
     function_name = "authorizer"
     description   = "Ping Federate authorizer for this app."
     handler       = "auth.lambda_handler"
@@ -292,7 +292,7 @@ Here are some examples of how you can use this module in your inventory structur
       }
     ]
 
-    kms_key_arn = module.kms.arn 
+    kms_key_arn = module.kms.arn
 
     environment_variables = {
       PingClientID    = data.aws_ssm_parameter.ping_client_id.value
@@ -316,7 +316,7 @@ Here are some examples of how you can use this module in your inventory structur
               "kms:Decrypt",
               "kms:DescribeKey",
             ],
-            "Resource" : [module.kms.arn] 
+            "Resource" : [module.kms.arn]
           }
         ]
     })
@@ -353,7 +353,7 @@ Note:  If you choose to provide the optional objects below, you will have to ref
 | Name | Description |
 |------|-------------|
 | id | The ID of the REST API. |
-| execution_arn | The Execution ARN of the REST API. | 
+| execution_arn | The Execution ARN of the REST API. |
 
 <hr>
 
@@ -428,11 +428,11 @@ Note:  If you choose to provide the optional objects below, you will have to ref
 | authorizer_credentials | The credentials required for the authorizer. To specify an IAM Role for API Gateway to assume, use the IAM Role ARN. | `string` | no | `null` |
 | provider_arns | Required for type COGNITO_USER_POOLS) A list of the Amazon Cognito user pool ARNs. Each element is of this format: arn:aws:cognito-idp:{region}:{account_id}:userpool/{user_pool_id}. | `set(string)` | no | `null` |
 
-## Variable: api_gateway_responses most basic use is not defining it. This will initialize DEFAULT_4XX and DEFAULT_5XX to work with CORS headers. 
+## Variable: api_gateway_responses most basic use is not defining it. This will initialize DEFAULT_4XX and DEFAULT_5XX to work with CORS headers.
 
 ## Variable: api_gateway_responses complete example with everything you can specify (with defaults specified). Provided values will override all defaults.
 ````hcl
-    api_gateway_responses = [ 
+    api_gateway_responses = [
       {
         response_type = "UNAUTHORIZED"
         response_parameters = {
@@ -443,7 +443,7 @@ Note:  If you choose to provide the optional objects below, you will have to ref
           "application/json" = "{ \"statusCode\": 400 }"
         }
       },
-      ... another gateway response 
+      ... another gateway response
     ]
 ````
 
@@ -703,3 +703,90 @@ Note:  If you choose to provide the optional objects below, you will have to ref
 | response_models | A map of the API models used for the response's content type. | `object` | no | `null` |
 | response_template | A map specifying the templates used to transform the response body. | `string` | no | `null` |
 | response_parameters | A map specifying the parameters (paths, query strings and headers) of the Gateway Response. | `object` | no | `null` |
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.5 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_api_gateway_api_key.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_api_key) | resource |
+| [aws_api_gateway_authorizer.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_authorizer) | resource |
+| [aws_api_gateway_base_path_mapping.mapping](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_base_path_mapping) | resource |
+| [aws_api_gateway_client_certificate.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_client_certificate) | resource |
+| [aws_api_gateway_deployment.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_deployment) | resource |
+| [aws_api_gateway_domain_name.api_domain](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_domain_name) | resource |
+| [aws_api_gateway_gateway_response.cors](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_gateway_response) | resource |
+| [aws_api_gateway_integration.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration) | resource |
+| [aws_api_gateway_integration.options_integration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration) | resource |
+| [aws_api_gateway_integration_response.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration_response) | resource |
+| [aws_api_gateway_integration_response.options_integration_response](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration_response) | resource |
+| [aws_api_gateway_method.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method) | resource |
+| [aws_api_gateway_method.options_method](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method) | resource |
+| [aws_api_gateway_method_response.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method_response) | resource |
+| [aws_api_gateway_method_response.options_200](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method_response) | resource |
+| [aws_api_gateway_model.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_model) | resource |
+| [aws_api_gateway_resource.fifth_paths](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
+| [aws_api_gateway_resource.first_paths](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
+| [aws_api_gateway_resource.fourth_paths](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
+| [aws_api_gateway_resource.second_paths](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
+| [aws_api_gateway_resource.third_paths](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
+| [aws_api_gateway_rest_api.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_rest_api) | resource |
+| [aws_api_gateway_stage.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_stage) | resource |
+| [aws_api_gateway_vpc_link.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_vpc_link) | resource |
+| [aws_route53_record.api_dns](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
+| [aws_wafv2_web_acl_association.association](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_association) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_api_gateway"></a> [api\_gateway](#input\_api\_gateway) | AWS API Gateway Settings. | `any` | `null` | no |
+| <a name="input_api_gateway_default"></a> [api\_gateway\_default](#input\_api\_gateway\_default) | AWS API Gateway Settings default. | `any` | <pre>{<br>  "acm_cert_arn": null,<br>  "api_key_source": null,<br>  "base_path_mapping_active_stage_name": null,<br>  "binary_media_types": null,<br>  "client_cert_description": "Managed by terraform-aws-api-gateway-v1 module",<br>  "client_cert_enabled": false,<br>  "custom_domain": null,<br>  "default_deployment_description": null,<br>  "default_deployment_name": "default",<br>  "default_deployment_variables": null,<br>  "description": "Managed by terraform-aws-api-gateway-v1 module",<br>  "endpoint_configuration": null,<br>  "hosted_zone_id": null,<br>  "minimum_compression_size": null,<br>  "name": null,<br>  "policy": null<br>}</pre> | no |
+| <a name="input_api_gateway_method_default"></a> [api\_gateway\_method\_default](#input\_api\_gateway\_method\_default) | AWS API Gateway methods default. | `any` | <pre>{<br>  "api_key_required": false,<br>  "authorization": "CUSTOM",<br>  "authorization_scopes": null,<br>  "authorizer_id": null,<br>  "authorizer_name": null,<br>  "http_method": "GET",<br>  "integration": {},<br>  "integration_response": {},<br>  "request_models": null,<br>  "request_parameters": {},<br>  "request_validator_id": null,<br>  "response": {}<br>}</pre> | no |
+| <a name="input_api_gateway_methods"></a> [api\_gateway\_methods](#input\_api\_gateway\_methods) | AWS API Gateway methods. | `any` | `[]` | no |
+| <a name="input_api_gateway_model_default"></a> [api\_gateway\_model\_default](#input\_api\_gateway\_model\_default) | AWS API Gateway model default. | `any` | <pre>{<br>  "content_type": "application/json",<br>  "description": "Managed by terraform-aws-api-gateway-v1 module",<br>  "name": null,<br>  "schema": "{\"type\":\"object\"}"<br>}</pre> | no |
+| <a name="input_api_gateway_models"></a> [api\_gateway\_models](#input\_api\_gateway\_models) | AWS API Gateway models. | `set(any)` | `[]` | no |
+| <a name="input_api_gateway_options_default"></a> [api\_gateway\_options\_default](#input\_api\_gateway\_options\_default) | AWS API Gateway options default. | `any` | <pre>{<br>  "api_key_required": false,<br>  "authorization": "NONE",<br>  "authorization_scopes": null,<br>  "authorizer_id": null,<br>  "authorizer_name": null,<br>  "http_method": "OPTIONS",<br>  "integration": {},<br>  "integration_response": {},<br>  "request_models": null,<br>  "request_parameters": null,<br>  "request_validator_id": null,<br>  "response": {}<br>}</pre> | no |
+| <a name="input_api_gateway_responses"></a> [api\_gateway\_responses](#input\_api\_gateway\_responses) | n/a | `any` | `[]` | no |
+| <a name="input_api_gateway_responses_default"></a> [api\_gateway\_responses\_default](#input\_api\_gateway\_responses\_default) | n/a | `any` | <pre>[<br>  {<br>    "response_parameters": {},<br>    "response_templates": {},<br>    "response_type": "DEFAULT_4XX",<br>    "status_code": null<br>  },<br>  {<br>    "response_parameters": {},<br>    "response_templates": {},<br>    "response_type": "DEFAULT_5XX",<br>    "status_code": null<br>  }<br>]</pre> | no |
+| <a name="input_api_gateway_stage_default"></a> [api\_gateway\_stage\_default](#input\_api\_gateway\_stage\_default) | AWS API Gateway stage default. | `any` | <pre>{<br>  "access_log_settings": [],<br>  "cache_cluster_enabled": false,<br>  "cache_cluster_size": null,<br>  "client_certificate_id": null,<br>  "documentation_version": null,<br>  "stage_description": "Managed by terraform-aws-api-gateway-v1 module",<br>  "stage_name": null,<br>  "stage_variables": null,<br>  "web_acl_arn": null,<br>  "xray_tracing_enabled": false<br>}</pre> | no |
+| <a name="input_api_gateway_stages"></a> [api\_gateway\_stages](#input\_api\_gateway\_stages) | AWS API Gateway stage. | `any` | `[]` | no |
+| <a name="input_api_keys"></a> [api\_keys](#input\_api\_keys) | AWS API Gateway API Keys. | `any` | `[]` | no |
+| <a name="input_api_keys_default"></a> [api\_keys\_default](#input\_api\_keys\_default) | AWS API Gateway API Keys default | `any` | <pre>{<br>  "enabled": true,<br>  "key_description": "Managed by terraform-aws-api-gateway-v1 module",<br>  "key_name": null,<br>  "value": null<br>}</pre> | no |
+| <a name="input_api_specification"></a> [api\_specification](#input\_api\_specification) | Swagger or OpenAPI Specification to deploy the API. This may conflict with other variables. | `string` | `null` | no |
+| <a name="input_authorizer_definition_default"></a> [authorizer\_definition\_default](#input\_authorizer\_definition\_default) | AWS API Gateway authorizer default. | `any` | <pre>{<br>  "authorizer_credentials": null,<br>  "authorizer_name": null,<br>  "authorizer_result_ttl_in_seconds": 0,<br>  "authorizer_type": "REQUEST",<br>  "authorizer_uri": null,<br>  "identity_source": "method.request.header.Authorization",<br>  "identity_validation_expression": null,<br>  "provider_arns": null<br>}</pre> | no |
+| <a name="input_authorizer_definitions"></a> [authorizer\_definitions](#input\_authorizer\_definitions) | AWS API Gateway authorizer. | `any` | `[]` | no |
+| <a name="input_cors_origin_domain"></a> [cors\_origin\_domain](#input\_cors\_origin\_domain) | The domain of the site that is calling this api.  e.g. https://bitlocker.pgcloud.com | `string` | `""` | no |
+| <a name="input_method_integration_default"></a> [method\_integration\_default](#input\_method\_integration\_default) | n/a | `any` | <pre>{<br>  "cache_key_parameters": null,<br>  "cache_namespace": null,<br>  "connection_id": null,<br>  "connection_type": "INTERNET",<br>  "content_handling": null,<br>  "credentials": null,<br>  "integration_http_method": "POST",<br>  "passthrough_behavior": null,<br>  "request_parameters": {},<br>  "request_templates": {<br>    "application/json": "{ \"statusCode\": 200 }"<br>  },<br>  "timeout_milliseconds": 29000,<br>  "type": "AWS_PROXY",<br>  "uri": null<br>}</pre> | no |
+| <a name="input_method_integration_response_default"></a> [method\_integration\_response\_default](#input\_method\_integration\_response\_default) | n/a | `any` | <pre>{<br>  "content_handling": null,<br>  "response_parameters": {},<br>  "response_template": null,<br>  "selection_pattern": null,<br>  "status_code": "200"<br>}</pre> | no |
+| <a name="input_method_response_default"></a> [method\_response\_default](#input\_method\_response\_default) | n/a | `any` | <pre>{<br>  "response_models": {<br>    "application/json": "Empty"<br>  },<br>  "response_parameters": {},<br>  "response_template": null,<br>  "response_type": null,<br>  "status_code": "200"<br>}</pre> | no |
+| <a name="input_options_integration_default"></a> [options\_integration\_default](#input\_options\_integration\_default) | n/a | `any` | <pre>{<br>  "cache_key_parameters": null,<br>  "cache_namespace": null,<br>  "connection_id": null,<br>  "connection_type": null,<br>  "content_handling": "CONVERT_TO_TEXT",<br>  "credentials": null,<br>  "integration_http_method": null,<br>  "passthrough_behavior": null,<br>  "request_parameters": {},<br>  "request_templates": {<br>    "application/json": "{ \"statusCode\": 200 }"<br>  },<br>  "timeout_milliseconds": 29000,<br>  "type": "MOCK",<br>  "uri": null<br>}</pre> | no |
+| <a name="input_options_integration_response_default"></a> [options\_integration\_response\_default](#input\_options\_integration\_response\_default) | n/a | `any` | <pre>{<br>  "content_handling": null,<br>  "response_parameters": {},<br>  "response_template": {<br>    "application/json": ""<br>  },<br>  "selection_pattern": null,<br>  "status_code": "200"<br>}</pre> | no |
+| <a name="input_options_response_default"></a> [options\_response\_default](#input\_options\_response\_default) | n/a | `any` | <pre>{<br>  "response_models": {},<br>  "response_parameters": {<br>    "method.response.header.Access-Control-Allow-Credentials": true,<br>    "method.response.header.Access-Control-Allow-Headers": true,<br>    "method.response.header.Access-Control-Allow-Methods": true,<br>    "method.response.header.Access-Control-Allow-Origin": true<br>  },<br>  "status_code": "200"<br>}</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to all resources. | `map(string)` | `{}` | no |
+| <a name="input_vpc_link_default"></a> [vpc\_link\_default](#input\_vpc\_link\_default) | AWS API Gateway VPC link defaults. | `any` | <pre>{<br>  "target_arns": null,<br>  "vpc_link_description": "Managed by terraform-aws-api-gateway-v1 module",<br>  "vpc_link_name": null<br>}</pre> | no |
+| <a name="input_vpc_links"></a> [vpc\_links](#input\_vpc\_links) | AWS API Gateway VPC links. | `any` | `[]` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_rest_api_execution_arn"></a> [rest\_api\_execution\_arn](#output\_rest\_api\_execution\_arn) | The Execution ARN of the REST API. |
+| <a name="output_rest_api_id"></a> [rest\_api\_id](#output\_rest\_api\_id) | The ID of the REST API. |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

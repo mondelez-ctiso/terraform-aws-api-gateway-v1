@@ -62,7 +62,7 @@ locals {
   )]
 
   // api_gateway_methods
-  api_gateway_responses = [for api_gateway_response in merge({ for api_gateway_response in var.api_gateway_responses_default : "${api_gateway_response.response_type}" => api_gateway_response }, { for api_gateway_response in var.api_gateway_responses : "${api_gateway_response.response_type}" => api_gateway_response }) :
+  api_gateway_responses = [for api_gateway_response in merge({ for api_gateway_response in var.api_gateway_responses_default : api_gateway_response.response_type => api_gateway_response }, { for api_gateway_response in var.api_gateway_responses : api_gateway_response.response_type => api_gateway_response }) :
     merge(
       api_gateway_response,
       {
