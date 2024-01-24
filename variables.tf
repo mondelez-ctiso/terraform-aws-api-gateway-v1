@@ -199,6 +199,7 @@ variable "api_gateway_stage_default" {
     stage_variables       = null
     xray_tracing_enabled  = false
     web_acl_arn           = null
+    web_acl_enabled       = false
   }
 }
 
