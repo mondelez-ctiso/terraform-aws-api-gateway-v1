@@ -8,10 +8,7 @@ locals {
   api_gateway = merge(var.api_gateway_default, var.api_gateway)
 
   // api_gateway_stages defaults
-  api_gateway_stages = var.api_gateway_stages != null ? {
-    for index, stage in var.api_gateway_stages :
-    tostring(index) => merge(var.api_gateway_stage_default, stage)
-  } : null
+  api_gateway_stages = var.api_gateway_stages != null ? [for stage in var.api_gateway_stages : merge(var.api_gateway_stage_default, stage)] : null
 
   // api_gateway_models defaults
   api_gateway_models = var.api_gateway_models != null ? [for model in var.api_gateway_models : merge(var.api_gateway_model_default, model)] : null

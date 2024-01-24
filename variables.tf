@@ -202,6 +202,12 @@ variable "api_gateway_stage_default" {
   }
 }
 
+variable "attach_webacl" {
+  description = "(Optional) Determines whether the web ACL should be attached to the API Gateway stage."
+  type        = bool
+  default     = false
+}
+
 variable "api_gateway_stages" {
   description = "AWS API Gateway stage."
   default     = []
