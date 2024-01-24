@@ -9,7 +9,7 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v1.1.0-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v1.5.0-green" alt="Terraform">
 </a>
 
 </p>
@@ -18,8 +18,8 @@
 
 This module has the following dependencies:
 
-- [Terraform 1.1.0](https://learn.hashicorp.com/terraform/getting-started/install.html)
-- Hashicorp AWS Provider ~> 4.0
+- [Terraform 1.5.0](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- Hashicorp AWS Provider ~> 5.0
 
 ## Limitations/TODOs
 
@@ -112,6 +112,63 @@ Here are some examples of how you can use this module in your inventory structur
     ]
 
     depends_on = [module.acm_cert]
+  }
+```
+
+### Basic Example Featuring Lambda Authorizers, a Custom Domain, and WebACL Attachment to the API Stage.
+```hcl
+  ###################
+  # API Gateway
+  ###################
+  module "api_gateway" {
+    source  = "spacelift.io/mondelez-ctiso/terraform-aws-api-gateway-v1/aws"
+    version = "3.1.0"
+
+    providers = { aws = aws }
+
+    tags = var.tags
+
+    cors_origin_domain = var.cors_origin_domain
+
+    api_gateway = {
+      name                                = "my-api-gateway-name"
+      hosted_zone_id                      = data.aws_ssm_parameter.hosted_zone.value
+      custom_domain                       = "api.${var.domain}"
+      acm_cert_arn                        = module.acm_cert.arn
+      base_path_mapping_active_stage_name = var.spacelift_stack_branch
+    }
+
+    api_gateway_stages = [
+      {
+        stage_name        = var.spacelift_stack_branch
+        stage_description = "The stage defined for ${var.spacelift_stack_branch}, tied to the default deployment."
+        web_acl_enabled   = true
+        web_acl_arn       = module.waf.web_acl_arn
+      },
+    ]
+
+    authorizer_definitions = [
+      {
+        authorizer_name = "pingFedAuth"
+        authorizer_uri  = module.ping_authorizer.this_lambda_function_invoke_arn
+      }
+    ]
+
+    // look for "api_gateway_methods complete example" below for complete data structure
+    api_gateway_methods = [
+      {
+        resource_path = "getSomethingGreat"
+        api_method = {
+          authorizer_name = "pingFedAuth"
+
+          integration = {
+            uri = module.app_lambda.this_lambda_function_invoke_arn
+          }
+        }
+      }
+    ]
+
+    depends_on = [module.acm_cert, module.waf]
   }
 ```
 
