@@ -33,6 +33,12 @@ module "api_gateway" {
   api_gateway = {
     name = "api-gateway"
   }
+  api_gateway_stages = [
+    {
+      stage_name        = "main"
+      stage_description = "The stage defined for main, tied to the default deployment."
+    }
+  ]
   api_gateway_methods = [
     {
       resource_path = "myPath"
@@ -41,6 +47,17 @@ module "api_gateway" {
         integration = {
           uri = module.lambda_function.lambda_function_invoke_arn
         }
+        http_method = "GET"
+      }
+    },
+    {
+      resource_path = "myPath"
+      api_method = {
+        authorization = "NONE"
+        integration = {
+          uri = module.lambda_function.lambda_function_invoke_arn
+        }
+        http_method = "POST"
       }
     }
   ]
