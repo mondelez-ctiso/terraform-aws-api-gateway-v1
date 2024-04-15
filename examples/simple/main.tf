@@ -31,8 +31,10 @@ module "api_gateway" {
   source = "../..//."
 
   api_gateway = {
-    name          = "api-gateway"
-    custom_domain = "api-gateway-v1.test.cloud.mdlz.com"
+    name           = "sinmple-test-api-gateway"
+    custom_domain  = null
+    hosted_zone_id = null
+    acm_cert_arn   = null
   }
 
   api_gateway_stages = [
