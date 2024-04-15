@@ -5,13 +5,12 @@
 
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 3.3.1"
+  version = "~> 4.0.0"
 
   function_name = "hello-world-lambda"
   description   = "Hello-World lambda function"
-
-  handler = "index.lambda_handler"
-  runtime = "python3.12"
+  handler       = "index.lambda_handler"
+  runtime       = "python3.12"
 
   publish = true
 
