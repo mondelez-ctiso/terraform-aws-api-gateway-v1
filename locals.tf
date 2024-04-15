@@ -43,7 +43,7 @@ locals {
   options_integration_response_default = var.cors_origin_domain != "" ? merge(var.options_integration_response_default, { response_parameters = local.response_parameters }) : var.options_integration_response_default
 
   // api_gateway_methods
-   api_gateway_methods = [for method in var.api_gateway_methods :
+  api_gateway_methods = [for method in var.api_gateway_methods :
     merge(method,
       {
         key = "${method.resource_path}-${method.api_method.http_method}"
