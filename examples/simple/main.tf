@@ -10,7 +10,7 @@ module "lambda_function" {
   function_name = "hello-world-lambda"
   description   = "Hello-World lambda function"
   handler       = "index.lambda_handler"
-  runtime       = "python3.12"
+  runtime       = "python3.9"
 
   publish = true
 
@@ -36,8 +36,7 @@ module "api_gateway" {
     custom_domain  = "api-gateway-v1.test.cloud.mdlz.com"
     hosted_zone_id = "test.cloud.mdlz.com"
     description = "The test api-gateway"
-    binary_media_types                  = ["UTF-8-encoded"]
-    minimum_compression_size            = -1
+    minimum_compression_size            = 0
     api_key_source = "HEADER"
     type           = ["EDGE"]
     acm_cert_arn   = ""
