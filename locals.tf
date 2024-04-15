@@ -43,7 +43,7 @@ locals {
   options_integration_response_default = var.cors_origin_domain != "" ? merge(var.options_integration_response_default, { response_parameters = local.response_parameters }) : var.options_integration_response_default
 
   // api_gateway_methods
-  api_gateway_methods = [for method in var.api_gateway_methods :
+   api_gateway_methods = {for method in var.api_gateway_methods : "${method.resource_path}-${uuid()}" =>
     merge(method,
       { api_method = merge(
         var.api_gateway_method_default,
@@ -59,7 +59,7 @@ locals {
         try({ integration_response = merge(local.options_integration_response_default, method.options_method.integration_response) }, { integration_response = local.options_integration_response_default }),
         try({ response = merge(var.options_response_default, method.options_method.response) }, { response = var.options_response_default }),
       ) },
-  )]
+  )}
 
   // api_gateway_methods
   api_gateway_responses = [for api_gateway_response in merge({ for api_gateway_response in var.api_gateway_responses_default : api_gateway_response.response_type => api_gateway_response }, { for api_gateway_response in var.api_gateway_responses : api_gateway_response.response_type => api_gateway_response }) :
