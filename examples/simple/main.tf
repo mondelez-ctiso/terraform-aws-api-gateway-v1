@@ -35,7 +35,14 @@ module "api_gateway" {
     name           = "simple-test-api-gateway"
     custom_domain  = "api-gateway-v1.test.cloud.mdlz.com"
     hosted_zone_id = "test.cloud.mdlz.com"
-    acm_cert_arn   = null
+    description = "The test api-gateway"
+    binary_media_types                  = ["UTF-8-encoded"]
+    minimum_compression_size            = -1
+    api_key_source = "HEADER"
+    type           = ["EDGE"]
+    acm_cert_arn   = ""
+    api_gateway_client_cert_enabled     = false
+    api_gateway_client_cert_description = ""
   }
 
   api_gateway_stages = [
