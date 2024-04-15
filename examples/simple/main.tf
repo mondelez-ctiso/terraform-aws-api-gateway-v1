@@ -24,6 +24,8 @@ module "lambda_function" {
       arn     = module.api_gateway.rest_api_execution_arn
     }
   }
+
+  layers = ["arn:aws:lambda:us-east-2:017000801446:layer:AWSLambdaPowertoolsPythonV2:46"]
 }
 
 module "api_gateway" {
