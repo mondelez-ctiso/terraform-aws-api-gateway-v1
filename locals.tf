@@ -46,7 +46,7 @@ locals {
   api_gateway_methods = [for method in var.api_gateway_methods :
     merge(method,
       {
-        key = "${method.resource_path}-${coalesce(try(method.api_method.http_method), "ANY")}"
+        key = "${method.resource_path}-${coalesce(try(method.api_method.http_method, null), "ANY")}"
       },
       { api_method = merge(
         var.api_gateway_method_default,
