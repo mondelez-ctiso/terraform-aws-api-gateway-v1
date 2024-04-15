@@ -310,7 +310,7 @@ resource "aws_api_gateway_integration_response" "default" {
 # Resource    : Api Gateway Options Method
 # Description : Terraform resource to create Api Gateway Options Method on AWS.
 resource "aws_api_gateway_method" "options_method" {
-  for_each = { for method in local.api_gateway_methods : method.resource_path => merge(method...) }
+  for_each = { for method in local.api_gateway_methods : method.resource_path => method... }
 
   rest_api_id   = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   resource_id   = lookup(local.resource_method_map, each.value["resource_path"])
@@ -331,7 +331,7 @@ resource "aws_api_gateway_method" "options_method" {
 # Resource    : Api Gateway Method Options Response
 # Description : Terraform resource to create Api Gateway Method Options Response on AWS.
 resource "aws_api_gateway_method_response" "options_200" {
-  for_each = { for method in local.api_gateway_methods : method.resource_path => merge(method...) }
+  for_each = { for method in local.api_gateway_methods : method.resource_path => method... }
 
   rest_api_id         = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   resource_id         = lookup(local.resource_method_map, each.value[0]["resource_path"])
@@ -346,7 +346,7 @@ resource "aws_api_gateway_method_response" "options_200" {
 # Resource    : Api Gateway Options Integration
 # Description : Terraform resource to create Api Gateway Options Integration on AWS.
 resource "aws_api_gateway_integration" "options_integration" {
-  for_each = { for method in local.api_gateway_methods : method.resource_path => merge(method...) }
+  for_each = { for method in local.api_gateway_methods : method.resource_path => method... }
 
   rest_api_id             = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   resource_id             = lookup(local.resource_method_map, each.value[0]["resource_path"])
@@ -371,7 +371,7 @@ resource "aws_api_gateway_integration" "options_integration" {
 # Resource    : Api Gateway Integration Response
 # Description : Terraform resource to create Api Gateway Integration Response on AWS for creating api.
 resource "aws_api_gateway_integration_response" "options_integration_response" {
-  for_each = { for method in local.api_gateway_methods : method.resource_path => merge(method...) }
+  for_each = { for method in local.api_gateway_methods : method.resource_path => method... }
 
   rest_api_id         = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   resource_id         = lookup(local.resource_method_map, each.value[0]["resource_path"])
