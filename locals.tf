@@ -45,6 +45,9 @@ locals {
   // api_gateway_methods
    api_gateway_methods = [for method in var.api_gateway_methods :
     merge(method,
+      {
+        key = "${method.resource_path}-${method.api_method.http_method}"
+      },
       { api_method = merge(
         var.api_gateway_method_default,
         try(method.api_method, {}),

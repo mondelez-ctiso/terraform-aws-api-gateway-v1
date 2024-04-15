@@ -227,7 +227,7 @@ resource "aws_api_gateway_resource" "fifth_paths" {
 # Resource    : Api Gateway Method
 # Description : Terraform resource to create Api Gateway Method on AWS.
 resource "aws_api_gateway_method" "default" {
-  for_each = { for method in local.api_gateway_methods : "${method.resource_path}-${method.api_method.http_method}" => method }
+  for_each = { for method in local.api_gateway_methods : method.key => method }
 
   rest_api_id   = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   resource_id   = lookup(local.resource_method_map, each.value["resource_path"])
