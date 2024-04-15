@@ -62,6 +62,16 @@ module "api_gateway" {
         }
         http_method = "POST"
       }
+    },
+        {
+      resource_path = "mySecondPath"
+      api_method = {
+        authorization = "NONE"
+        integration = {
+          uri = module.lambda_function.lambda_function_invoke_arn
+        }
+        http_method = "GET"
+      }
     }
   ]
 }
