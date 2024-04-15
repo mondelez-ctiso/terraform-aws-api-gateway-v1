@@ -313,10 +313,10 @@ resource "aws_api_gateway_method" "options_method" {
   for_each = { for method in local.api_gateway_methods : method.resource_path => method... }
 
   rest_api_id   = aws_api_gateway_rest_api.default[local.api_gateway.name].id
-  resource_id   = lookup(local.resource_method_map, each.value["resource_path"])
+  resource_id   = lookup(local.resource_method_map, each.value[0]["resource_path"])
   http_method   = each.value[0]["options_method"]["http_method"]
   authorization = each.value[0]["options_method"]["authorization"]
-  authorizer_id = (each.value["options_method"]["authorizer_id"] != null ?
+  authorizer_id = (each.value[0]["options_method"]["authorizer_id"] != null ?
     each.value[0]["options_method"]["authorizer_id"] :
     each.value[0]["options_method"]["authorizer_name"] != null ?
     aws_api_gateway_authorizer.default[each.value["options_method"]["authorizer_name"]].id :
