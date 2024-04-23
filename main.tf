@@ -220,6 +220,14 @@ resource "aws_api_gateway_resource" "fifth_paths" {
   path_part   = each.value.segment
 }
 
+resource "aws_api_gateway_resource" "sixth_paths" {
+  for_each = local.max_number_of_levels > 5 ? { for path in local.length_path_segments_map[6] : join("/", path) => { segment = path[5], parent = join("/", slice(path, 0, 5)) } } : {}
+
+  rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
+  parent_id   = aws_api_gateway_resource.fifth_paths[each.value.parent].id
+  path_part   = each.value.segment
+}
+
 ########################
 ## API Gateway Method ##
 ########################

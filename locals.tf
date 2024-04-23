@@ -103,7 +103,8 @@ locals {
       { for item in aws_api_gateway_resource.second_paths : trimprefix(item.path, "/") => item.id },
       { for item in aws_api_gateway_resource.third_paths : trimprefix(item.path, "/") => item.id },
       { for item in aws_api_gateway_resource.fourth_paths : trimprefix(item.path, "/") => item.id },
-      { for item in aws_api_gateway_resource.fifth_paths : trimprefix(item.path, "/") => item.id }
+      { for item in aws_api_gateway_resource.fifth_paths : trimprefix(item.path, "/") => item.id },
+      { for item in aws_api_gateway_resource.sixth_paths : trimprefix(item.path, "/") => item.id }
     )
   )
 }
