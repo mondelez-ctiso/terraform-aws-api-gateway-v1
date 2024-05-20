@@ -64,12 +64,10 @@ locals {
       ) },
   )]
 
-  # any_api_method_with_settings = anytrue([
-  #   for method in local.api_gateway_methods :
-  #   contains(keys(method.api_method), "settings")
-  # ])
-
-  any_api_method_with_settings = true
+  any_api_method_with_settings = anytrue([
+    for method in var.api_gateway_methods :
+    contains(keys(method.api_method), "settings")
+  ])
 
   // api_gateway_respones
   api_gateway_responses = [for api_gateway_response in merge({ for api_gateway_response in var.api_gateway_responses_default : api_gateway_response.response_type => api_gateway_response }, { for api_gateway_response in var.api_gateway_responses : api_gateway_response.response_type => api_gateway_response }) :
