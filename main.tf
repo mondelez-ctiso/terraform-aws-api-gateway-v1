@@ -269,7 +269,7 @@ resource "aws_api_gateway_method_settings" "default" {
   method_path = each.value["resource_path"]
 
   dynamic "settings" {
-    for_each = lookup(each.value["api_method"], "settings", [])
+    for_each = lookup(each.value["api_method"], "settings", {})
     content {
       metrics_enabled                            = lookup(settings.value, "metrics_enabled", false)
       logging_level                              = lookup(settings.value, "logging_level", "ERROR")
