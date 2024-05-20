@@ -41,12 +41,12 @@ module "api_gateway" {
     api_gateway_client_cert_enabled = false
   }
 
-  # api_gateway_stages = [
-  #   {
-  #     stage_name        = "prod"
-  #     stage_description = "The stage defined for prod, tied to the default deployment."
-  #   }
-  # ]
+  api_gateway_stages = [
+    {
+      stage_name        = "prod"
+      stage_description = "The stage defined for prod, tied to the default deployment."
+    }
+  ]
   api_gateway_methods = [
     {
       resource_path = "myPath"
