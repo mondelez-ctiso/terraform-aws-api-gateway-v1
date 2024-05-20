@@ -103,7 +103,6 @@ locals {
   ###########################
   ## Resource path parsing ##
   ###########################
-
   paths = [for method in local.api_gateway_methods : method.resource_path]
 
   paths_as_segments = [for path in local.paths : split("/", path)]
