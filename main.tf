@@ -296,13 +296,13 @@ resource "aws_api_gateway_method" "default" {
 locals {
   # Create a list of maps combining each stage_name with each api_method
   stage_api_methods = flatten([
-    for stage in local.api_gateway_stages : [
-      for method in local.api_gateway_methods : {
+    for stage in local.api_gateway_stages : {
+      for method in local.api_gateway_methods : "${method.resource_path}-${stage.stage_name}" => {
         stage_name    = stage.stage_name
         resource_path = method.resource_path
         api_method    = method.api_method
       }
-    ]
+    }
   ])
 }
 # Resource    : AWS API Gateway method settings.
