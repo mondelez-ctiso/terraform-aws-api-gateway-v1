@@ -94,9 +94,9 @@ module "api_gateway" {
       resource_path = "mySecondPath"
 
       api_method = {
-        # settings = {
-        #   metrics_enabled = true
-        # }
+        settings = {
+          metrics_enabled = true
+        }
         authorization = "NONE"
         integration = {
           uri = module.lambda_function.lambda_function_invoke_arn
