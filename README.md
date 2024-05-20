@@ -850,6 +850,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_api_gateway_stage_invoke_urls"></a> [api\_gateway\_stage\_invoke\_urls](#output\_api\_gateway\_stage\_invoke\_urls) | A map of invoke\_urls for a given key (stage\_name). |
 | <a name="output_rest_api_execution_arn"></a> [rest\_api\_execution\_arn](#output\_rest\_api\_execution\_arn) | The Execution ARN of the REST API. |
 | <a name="output_rest_api_id"></a> [rest\_api\_id](#output\_rest\_api\_id) | The ID of the REST API. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -33,5 +33,7 @@ No inputs.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_api_gateway_stage_invoke_urls"></a> [api\_gateway\_stage\_invoke\_urls](#output\_api\_gateway\_stage\_invoke\_urls) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
