@@ -267,7 +267,7 @@ resource "aws_api_gateway_method_settings" "default" {
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = each.key
-  method_path = each.value["api_method"]["resource_path"]
+  method_path = each.value["resource_path"]
 
   dynamic "settings" {
     for_each = [each.value["api_method"]["settings"]]
