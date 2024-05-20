@@ -8,8 +8,8 @@ locals {
   api_gateway = merge(var.api_gateway_default, var.api_gateway)
 
   // api_gateway_stages defaults
-  api_gateway_stages = var.api_gateway_stages != null ? [for stage in var.api_gateway_stages : merge(var.api_gateway_stage_default, stage)] : null
-
+  api_gateway_stages     = var.api_gateway_stages != null ? [for stage in var.api_gateway_stages : merge(var.api_gateway_stage_default, stage)] : null
+  api_gateway_stages_map = var.api_gateway_stages != null ? { for stage in var.api_gateway_stages : stage.stage_name => merge(var.api_gateway_stage_default, stage) } : null
   // api_gateway_models defaults
   api_gateway_models = var.api_gateway_models != null ? [for model in var.api_gateway_models : merge(var.api_gateway_model_default, model)] : null
 
@@ -71,7 +71,7 @@ locals {
 
   # Create a list of maps combining each stage_name with each api_method
   stage_api_methods = flatten([
-    for stage in local.api_gateway_stages : [
+    for stage in local.api_gateway_stages_map : [
       for method in local.api_gateway_methods : {
         key           = "${method.key}-${stage.stage_name}"
         stage_name    = stage.stage_name
