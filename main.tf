@@ -38,6 +38,13 @@ resource "aws_api_gateway_domain_name" "api_domain" {
 
   certificate_arn = each.value["acm_cert_arn"]
   domain_name     = each.value["custom_domain"]
+
+  dynamic "endpoint_configuration" {
+    for_each = each.value["endpoint_configuration"] == null ? [] : [each.value["endpoint_configuration"]]
+    content {
+      types = endpoint_configuration.value.types
+    }
+  }
 }
 
 # Resource    : Api Gateway Base Path Mapping
