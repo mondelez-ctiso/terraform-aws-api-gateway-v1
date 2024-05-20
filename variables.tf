@@ -40,7 +40,7 @@ variable "api_gateway_default" {
     custom_domain                       = null
     acm_cert_arn                        = null
     base_path_mapping_active_stage_name = null
-    default_deployment_name             = "default"
+    default_deployment_name             = "prod"
     default_deployment_description      = null
     default_deployment_variables        = null
     client_cert_enabled                 = false
