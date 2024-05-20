@@ -260,7 +260,7 @@ resource "aws_api_gateway_method" "default" {
 }
 
 # Resource    : AWS API Gateway method settings.
-# Description :
+# Description : Added settings
 resource "aws_api_gateway_method_settings" "default" {
   for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name =>
   { for method in local.api_gateway_methods : method.key => method if lookup(method["api_method"], "settings", false) } }
