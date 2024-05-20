@@ -1,7 +1,6 @@
 ###########################
 # Supporting resources
-###########################
-# This needs Python on the container... RIP
+#######RIP####################
 
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
@@ -32,13 +31,13 @@ module "api_gateway" {
   source = "../..//."
 
   api_gateway = {
-    name                     = "simple-test-api-gateway"
-    custom_domain            = "api-gateway-v1.test.cloud.mdlz.com"
-    hosted_zone_id           = "test.cloud.mdlz.com"
-    description              = "The test api-gateway"
-    minimum_compression_size = 0
-    api_key_source           = "HEADER"
-    # type                                = ["REGIONAL"]
+    name                                = "simple-test-api-gateway"
+    custom_domain                       = "api-gateway-v1.test.cloud.mdlz.com"
+    hosted_zone_id                      = "test.cloud.mdlz.com"
+    description                         = "The test api-gateway"
+    minimum_compression_size            = 0
+    api_key_source                      = "HEADER"
+    type                                = ["REGIONAL"]
     acm_cert_arn                        = ""
     api_gateway_client_cert_enabled     = false
     api_gateway_client_cert_description = ""
