@@ -296,19 +296,20 @@ resource "aws_api_gateway_method" "default" {
 locals {
   # Create a list of maps combining each stage_name with each api_method
   stage_api_methods = flatten([
-    for stage in local.api_gateway_stages : {
-      for method in local.api_gateway_methods : "${method.resource_path}/${method.api_method.http_method}-${stage.stage_name}" => {
+    for stage in local.api_gateway_stages : [
+      for method in local.api_gateway_methods : {
+        key           = method.key
         stage_name    = stage.stage_name
         resource_path = method.resource_path
         api_method    = method.api_method
       }
-    }
+    ]
   ])
 }
 # Resource    : AWS API Gateway method settings.
 # Description : Added settings
 resource "aws_api_gateway_method_settings" "default" {
-  for_each = toset(local.stage_api_methods)
+  for_each = { for method in local.stage_api_methods : method.key => method }
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = aws_api_gateway_stage.default[each.value["stage_name"]].stage_name
