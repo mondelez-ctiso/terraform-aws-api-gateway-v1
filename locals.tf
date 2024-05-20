@@ -67,9 +67,7 @@ locals {
     merge(method,
       {
         key = "${method.resource_path}-${coalesce(try(method.api_method.http_method, null), "ANY")}"
-      },
-      { api_method = try(method.api_method, {}),
-      },
+      }
   )]
 
   any_api_method_with_settings = anytrue([
