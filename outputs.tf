@@ -10,7 +10,7 @@ output "rest_api_execution_arn" {
 
 output "api_gateway_stage_invoke_urls" {
   value = {
-    for stage, details in aws_api_gateway_stage.example :
+    for stage, details in aws_api_gateway_stage.default :
     stage => details.invoke_url
   }
   description = "A map of invoke_urls for a given key (stage_name)."
