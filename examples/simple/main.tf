@@ -40,9 +40,7 @@ module "api_gateway" {
     endpoint_configuration = {
       types = ["REGIONAL"]
     }
-    acm_cert_arn                        = ""
-    api_gateway_client_cert_enabled     = false
-    api_gateway_client_cert_description = ""
+    api_gateway_client_cert_enabled = false
   }
 
   api_gateway_stages = [
