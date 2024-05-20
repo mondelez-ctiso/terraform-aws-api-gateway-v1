@@ -43,8 +43,8 @@ module "api_gateway" {
 
   api_gateway_stages = [
     {
-      stage_name        = "main"
-      stage_description = "The stage defined for main, tied to the default deployment."
+      stage_name        = "prod"
+      stage_description = "The stage defined for prod, tied to the default deployment."
     }
   ]
   api_gateway_methods = [
