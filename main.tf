@@ -98,6 +98,8 @@ resource "aws_api_gateway_deployment" "default" {
 }
 
 resource "aws_api_gateway_account" "this" {
+  count = local.any_api_method_with_settings ? 1 : 0
+
   cloudwatch_role_arn = aws_iam_role.api_gw_cw_role.arn
 }
 
@@ -114,11 +116,15 @@ data "aws_iam_policy_document" "assume_role_policy" {
 }
 
 resource "aws_iam_role" "api_gw_cw_role" {
+  count = local.any_api_method_with_settings ? 1 : 0
+
   name               = "APIGWCloudwatchrole"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "api_gw_cw_role_policy_attachment" {
+  count = local.any_api_method_with_settings ? 1 : 0
+
   role       = aws_iam_role.api_gw_cw_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
 }
@@ -294,7 +300,7 @@ resource "aws_api_gateway_method_settings" "default" {
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = aws_api_gateway_stage.default["prod"].stage_name
-  method_path = method["resource_path"]
+  method_path = each.value["resource_path"]
 
   dynamic "settings" {
     for_each = [each.value["api_method"]["settings"]]
