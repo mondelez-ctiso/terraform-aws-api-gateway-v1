@@ -54,7 +54,7 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
 
   api_id      = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = each.key
-  domain_name = local.api_gateway.custom_domain
+  domain_name = local.api_gateway.custom_domain == null ? null : local.api_gateway.custom_domain
   base_path   = each.key
 
   depends_on = [aws_api_gateway_deployment.default, aws_api_gateway_stage.default]
