@@ -63,6 +63,9 @@ module "api_gateway" {
     },
     {
       resource_path = "myPath"
+      settings = {
+        metrics_enabled = true
+      }
       api_method = {
         authorization = "NONE"
         integration = {
@@ -73,6 +76,9 @@ module "api_gateway" {
     },
     {
       resource_path = "mySecondPath"
+      settings = {
+        metrics_enabled = true
+      }
       api_method = {
         authorization = "NONE"
         integration = {
