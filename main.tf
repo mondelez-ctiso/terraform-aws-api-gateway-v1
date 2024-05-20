@@ -302,10 +302,10 @@ resource "aws_api_gateway_method_settings" "default" {
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = aws_api_gateway_stage.default[each.key].stage_name
-  method_path = "${each.value["resource_path"]}/${each.value["api_method"]["http_method"]}"
+  method_path = "${each.value[each.key]["resource_path"]}/${each.value[each.key]["api_method"]["http_method"]}"
 
   dynamic "settings" {
-    for_each = [each.value["api_method"]["settings"]]
+    for_each = [each.value[each.key]["api_method"]["settings"]]
     content {
       metrics_enabled = lookup(settings.value, "metrics_enabled", false)
       logging_level   = lookup(settings.value, "logging_level", "ERROR")
