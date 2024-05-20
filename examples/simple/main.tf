@@ -53,6 +53,9 @@ module "api_gateway" {
   api_gateway_methods = [
     {
       resource_path = "myPath"
+      settings = {
+        metrics_enabled = true
+      }
       api_method = {
         authorization = "NONE"
         integration = {

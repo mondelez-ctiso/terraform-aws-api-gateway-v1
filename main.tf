@@ -43,12 +43,12 @@ resource "aws_api_gateway_domain_name" "api_domain" {
 # Resource    : Api Gateway Base Path Mapping
 # Description : Terraform resource to create Api Gateway base path mapping on AWS.
 resource "aws_api_gateway_base_path_mapping" "mapping" {
-  for_each = { for stage in local.api_gateway_stages : stage.stage_name => stage }
+  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage }
 
   api_id      = aws_api_gateway_rest_api.default[local.api_gateway.name].id
-  stage_name  = each.value["stage_name"]
+  stage_name  = each.key
   domain_name = local.api_gateway.custom_domain
-  base_path   = each.value["stage_name"]
+  base_path   = each.key
 
   depends_on = [aws_api_gateway_deployment.default, aws_api_gateway_stage.default]
 }
@@ -93,11 +93,11 @@ resource "aws_api_gateway_deployment" "default" {
 # Resource    : Api Gateway Stage
 # Description : Terraform resource to create Api Gateway Stage on AWS
 resource "aws_api_gateway_stage" "default" {
-  for_each = { for stage in local.api_gateway_stages : stage.stage_name => stage }
+  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage }
 
   rest_api_id           = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   deployment_id         = aws_api_gateway_deployment.default[local.api_gateway.name].id
-  stage_name            = each.value["stage_name"]
+  stage_name            = each.key
   cache_cluster_enabled = each.value["cache_cluster_enabled"]
   cache_cluster_size    = each.value["cache_cluster_size"]
   client_certificate_id = each.value["client_certificate_id"] != null ? each.value["client_certificate_id"] : (local.api_gateway.client_cert_enabled ? aws_api_gateway_client_certificate.default[local.api_gateway.name].id : "")
@@ -250,6 +250,31 @@ resource "aws_api_gateway_method" "default" {
   request_models       = each.value["api_method"]["request_models"]
   request_validator_id = each.value["api_method"]["request_validator_id"]
   request_parameters   = each.value["api_method"]["request_parameters"]
+}
+
+resource "aws_api_gateway_method_settings" "default" {
+  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name =>
+  { for method in local.api_gateway_methods : method.key => method if method["api_method"]["settings"] != null } }
+
+  rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
+  stage_name  = each.key
+  method_path = each.value["api_method"]["resource_path"]
+
+  dynamic "settings" {
+    for_each = [each.value["api_method"]["settings"]]
+    content {
+      metrics_enabled                            = lookup(settings.value, "metrics_enabled", false)
+      logging_level                              = lookup(settings.value, "logging_level", "ERROR")
+      caching_enabled                            = lookup(settings.value, "caching_enabled", false)
+      cache_data_encrypted                       = lookup(settings.value, "cache_data_encrypted", true)
+      cache_ttl_in_seconds                       = lookup(settings.value, "cache_ttl_in_seconds", null)
+      data_trace_enabled                         = lookup(settings.value, "data_trace_enabled", false)
+      require_authorization_for_cache_control    = lookup(settings.value, "require_authorization_for_cache_control", false)
+      throttling_burst_limit                     = lookup(settings.value, "throttling_burst_limit", -1)
+      throttling_rate_limit                      = lookup(settings.value, "throttling_rate_limit", -1)
+      unauthorized_cache_control_header_strategy = lookup(settings.value, "unauthorized_cache_control_header_strategy", null)
+    }
+  }
 }
 
 # Resource    : Api Gateway Method Response
