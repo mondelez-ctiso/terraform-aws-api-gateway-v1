@@ -50,11 +50,11 @@ resource "aws_api_gateway_domain_name" "api_domain" {
 # Resource    : Api Gateway Base Path Mapping
 # Description : Terraform resource to create Api Gateway base path mapping on AWS.
 resource "aws_api_gateway_base_path_mapping" "mapping" {
-  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage }
+  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage if local.api_gateway.custom_domain != null }
 
   api_id      = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = each.key
-  domain_name = local.api_gateway.custom_domain == null ? null : local.api_gateway.custom_domain
+  domain_name = local.api_gateway.custom_domain
   base_path   = each.key
 
   depends_on = [aws_api_gateway_deployment.default, aws_api_gateway_stage.default]
