@@ -10,7 +10,7 @@ module "lambda_function" {
   function_name = "hello-world-lambda"
   description   = "Hello-World lambda function"
   handler       = "index.lambda_handler"
-  runtime       = "python3.9"
+  runtime       = "python3.11"
 
   publish = true
 
