@@ -97,6 +97,30 @@ resource "aws_api_gateway_deployment" "default" {
   }
 }
 
+resource "aws_api_gateway_account" "this" {
+  cloudwatch_role_arn = aws_iam_role.cloudwatch.arn
+}
+
+resource "aws_iam_role" "cloudwatch" {
+  name = "api_gateway_cloudwatch_global"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "apigateway.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
 # Resource    : Api Gateway Stage
 # Description : Terraform resource to create Api Gateway Stage on AWS
 resource "aws_api_gateway_stage" "default" {
