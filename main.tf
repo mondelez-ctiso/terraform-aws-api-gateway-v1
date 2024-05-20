@@ -126,6 +126,8 @@ resource "aws_iam_role_policy_attachment" "api_gw_cw_role_policy_attachment" {
 # Resource    : Api Gateway Stage
 # Description : Terraform resource to create Api Gateway Stage on AWS
 resource "aws_api_gateway_stage" "default" {
+  depends_on = [aws_api_gateway_account.this]
+
   for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage }
 
   rest_api_id           = aws_api_gateway_rest_api.default[local.api_gateway.name].id
