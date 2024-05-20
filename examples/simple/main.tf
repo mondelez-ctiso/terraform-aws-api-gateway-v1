@@ -38,7 +38,7 @@ module "api_gateway" {
     description                         = "The test api-gateway"
     minimum_compression_size            = 0
     api_key_source                      = "HEADER"
-    type                                = ["EDGE"]
+    type                                = ["REGIONAL"]
     acm_cert_arn                        = ""
     api_gateway_client_cert_enabled     = false
     api_gateway_client_cert_description = ""
