@@ -27,26 +27,9 @@ module "lambda_function" {
   layers = ["arn:aws:lambda:us-east-2:017000801446:layer:AWSLambdaPowertoolsPythonV2:46"]
 }
 
-data "aws_iam_policy_document" "assume_role_policy" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["apigateway.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "api_gateway_access_role" {
-  name               = "APIGWCloudwatchRole"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
-
-resource "aws_iam_role_policy_attachment" "api_gateway_access_role_policy_attachment" {
-  role       = aws_iam_role.api_gateway_access_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+resource "aws_cloudwatch_log_group" "api_gw_log_group" {
+  name              = "/aws/apigateway/simple-test-api-logs"
+  retention_in_days = 30
 }
 
 module "api_gateway" {
@@ -68,7 +51,7 @@ module "api_gateway" {
       stage_name        = "prod"
       stage_description = "The stage defined for prod, tied to the default deployment."
       access_log_settings = [{
-        destination_arn = aws_iam_role.api_gateway_access_role.arn
+        destination_arn = aws_cloudwatch_log_group.api_gw_log_group.arn
         format          = "{ \"requestId\":\"$context.requestId\", \"extendedRequestId\":\"$context.extendedRequestId\",\"ip\": \"$context.identity.sourceIp\", \"caller\":\"$context.identity.caller\", \"user\":\"$context.identity.user\", \"requestTime\":\"$context.requestTime\", \"httpMethod\":\"$context.httpMethod\", \"resourcePath\":\"$context.resourcePath\", \"status\":\"$context.status\", \"protocol\":\"$context.protocol\", \"responseLength\":\"$context.responseLength\" }"
       }]
     }
