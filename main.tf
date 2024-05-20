@@ -308,7 +308,7 @@ locals {
 # Resource    : AWS API Gateway method settings.
 # Description : Added settings
 resource "aws_api_gateway_method_settings" "default" {
-  for_each = [local.stage_api_methods]
+  for_each = toset(local.stage_api_methods)
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = aws_api_gateway_stage.default[each.value["stage_name"]].stage_name
