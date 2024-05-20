@@ -770,13 +770,6 @@ variable "api_gateway_methods" {
     error_message = "Optional attribute 'authorizer_name' of 'api_gateway_methods.api_method' must be a string with length > 1."
   }
 
-  // api_method.settings
-  # validation {
-  #   condition     = length(var.api_gateway_methods) > 0 ? !can(index([for method in var.api_gateway_methods : can(lookup(method.api_method, "authorizer_name")) ? length(lookup(method.api_method, "authorizer_name")) > 1 : true], false)) : true
-  #   error_message = "Optional attribute 'authorizer_name' of 'api_gateway_methods.api_method' must be a string with length > 1."
-  # }
-
-
   // api_method.integration.integration_http_method
   validation {
     condition = (length(var.api_gateway_methods) > 0 ?
