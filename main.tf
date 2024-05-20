@@ -161,7 +161,7 @@ resource "aws_api_gateway_stage" "default" {
 # Resource    : Api Gateway WAF Association
 # Description : Terraform resource to associate a WAF to the API Gateway.
 resource "aws_wafv2_web_acl_association" "association" {
-  for_each     = { for stage in local.api_gateway_stages : stage.stage_name => stage if stage.web_acl_enabled }
+  for_each     = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage if stage.web_acl_enabled }
   resource_arn = aws_api_gateway_stage.default[each.key].arn
   web_acl_arn  = each.value["web_acl_arn"]
 }
@@ -296,10 +296,12 @@ resource "aws_api_gateway_method" "default" {
 # Resource    : AWS API Gateway method settings.
 # Description : Added settings
 resource "aws_api_gateway_method_settings" "default" {
-  for_each = { for method in local.api_gateway_methods : method.key => method }
+  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name =>
+    { for method in local.api_gateway_methods : method.key => method }
+  }
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
-  stage_name  = aws_api_gateway_stage.default["prod"].stage_name
+  stage_name  = aws_api_gateway_stage.default[each.key].stage_name
   method_path = "${each.value["resource_path"]}/${each.value["api_method"]["http_method"]}"
 
   dynamic "settings" {
