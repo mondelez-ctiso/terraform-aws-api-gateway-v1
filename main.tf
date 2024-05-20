@@ -98,27 +98,29 @@ resource "aws_api_gateway_deployment" "default" {
 }
 
 resource "aws_api_gateway_account" "this" {
-  cloudwatch_role_arn = aws_iam_role.cloudwatch.arn
+  cloudwatch_role_arn = aws_iam_role.api_gw_cw_role.arn
 }
 
-resource "aws_iam_role" "cloudwatch" {
-  name = "api_gateway_cloudwatch_global"
+data "aws_iam_policy_document" "assume_role_policy" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "apigateway.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
     }
-  ]
+  }
 }
-EOF
+
+resource "aws_iam_role" "api_gw_cw_role" {
+  name               = "APIGWCloudwatchrole"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "api_gw_cw_role_policy_attachment" {
+  role       = aws_iam_role.api_gw_cw_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
 }
 
 # Resource    : Api Gateway Stage
