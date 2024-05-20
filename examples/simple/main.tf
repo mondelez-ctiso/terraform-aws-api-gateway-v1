@@ -50,10 +50,11 @@ module "api_gateway" {
   api_gateway_methods = [
     {
       resource_path = "myPath"
-      settings = {
-        metrics_enabled = true
-      }
+
       api_method = {
+        settings = {
+          metrics_enabled = true
+        }
         authorization = "NONE"
         integration = {
           uri = module.lambda_function.lambda_function_invoke_arn
@@ -63,10 +64,11 @@ module "api_gateway" {
     },
     {
       resource_path = "myPath"
-      settings = {
-        metrics_enabled = true
-      }
+
       api_method = {
+        settings = {
+          metrics_enabled = true
+        }
         authorization = "NONE"
         integration = {
           uri = module.lambda_function.lambda_function_invoke_arn
@@ -76,10 +78,11 @@ module "api_gateway" {
     },
     {
       resource_path = "mySecondPath"
-      settings = {
-        metrics_enabled = true
-      }
+
       api_method = {
+        settings = {
+          metrics_enabled = true
+        }
         authorization = "NONE"
         integration = {
           uri = module.lambda_function.lambda_function_invoke_arn
