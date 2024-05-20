@@ -77,7 +77,7 @@ locals {
         stage_name    = stage.stage_name
         resource_path = method.resource_path
         api_method    = method.api_method
-      } if contains(keys(method.api_method), "settings")
+      }
     ]
   ])
 

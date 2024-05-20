@@ -295,7 +295,7 @@ resource "aws_api_gateway_method" "default" {
 
 # Resource    : AWS API Gateway method settings.
 # Description : Added settings
-resource "aws_api_gateway_method_settings" "default" {
+resource "aws_api_gateway_method_settings" "method_settings" {
   for_each = { for method in local.stage_api_methods : method.key => method }
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
