@@ -33,6 +33,7 @@ module "api_gateway" {
   api_gateway = {
     name                     = "simple-test-api-gateway"
     description              = "The test api-gateway"
+    default_deployment_name  = "prod"
     minimum_compression_size = 0
     api_key_source           = "HEADER"
     endpoint_configuration = {
