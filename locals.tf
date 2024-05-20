@@ -63,7 +63,8 @@ locals {
         try({ response = merge(var.options_response_default, method.options_method.response) }, { response = var.options_response_default }),
       ) },
   )]
-  api_gateway_methods_test = [for method in var.api_gateway_methods :
+
+  api_gateway_methods_for_method_settings_iteration = [for method in var.api_gateway_methods :
     merge(method,
       {
         key = "${method.resource_path}-${coalesce(try(method.api_method.http_method, null), "ANY")}"
@@ -78,7 +79,7 @@ locals {
   # Create a list of maps combining each stage_name with each api_method
   stage_api_methods = flatten([
     for stage in local.api_gateway_stages : [
-      for method in local.api_gateway_methods_test : {
+      for method in local.api_gateway_methods_for_method_settings_iteration : {
         key           = "${method.key}-${stage.stage_name}"
         stage_name    = stage.stage_name
         resource_path = method.resource_path
