@@ -297,7 +297,7 @@ locals {
   # Create a list of maps combining each stage_name with each api_method
   stage_api_methods = flatten([
     for stage in local.api_gateway_stages : {
-      for method in local.api_gateway_methods : "${method.resource_path}/${method.resource_path.api_method.http_method}-${stage.stage_name}" => {
+      for method in local.api_gateway_methods : "${method.resource_path}/${method.api_method.http_method}-${stage.stage_name}" => {
         stage_name    = stage.stage_name
         resource_path = method.resource_path
         api_method    = method.api_method
