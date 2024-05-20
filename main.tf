@@ -262,11 +262,10 @@ resource "aws_api_gateway_method" "default" {
 # Resource    : AWS API Gateway method settings.
 # Description : Added settings
 resource "aws_api_gateway_method_settings" "default" {
-  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name =>
-  { for method in local.api_gateway_methods : method.key => method if lookup(method["api_method"], "settings", false) } }
+  for_each = { for method in local.api_gateway_methods : method.key => method if lookup(method["api_method"], "settings", false) }
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
-  stage_name  = each.key
+  stage_name  = "prod"
   method_path = each.value["resource_path"]
 
   dynamic "settings" {
