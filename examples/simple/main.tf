@@ -32,8 +32,6 @@ module "api_gateway" {
 
   api_gateway = {
     name                     = "simple-test-api-gateway"
-    custom_domain            = "api-gateway-v1.test.cloud.mdlz.com"
-    hosted_zone_id           = "test.cloud.mdlz.com"
     description              = "The test api-gateway"
     minimum_compression_size = 0
     api_key_source           = "HEADER"
