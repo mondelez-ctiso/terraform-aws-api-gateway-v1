@@ -100,7 +100,7 @@ resource "aws_api_gateway_deployment" "default" {
 resource "aws_api_gateway_account" "this" {
   count = local.any_api_method_with_settings ? 1 : 0
 
-  cloudwatch_role_arn = aws_iam_role.api_gw_cw_role.arn
+  cloudwatch_role_arn = aws_iam_role.api_gw_cw_role[0].arn
 }
 
 data "aws_iam_policy_document" "assume_role_policy" {
@@ -125,14 +125,14 @@ resource "aws_iam_role" "api_gw_cw_role" {
 resource "aws_iam_role_policy_attachment" "api_gw_cw_role_policy_attachment" {
   count = local.any_api_method_with_settings ? 1 : 0
 
-  role       = aws_iam_role.api_gw_cw_role.name
+  role       = aws_iam_role.api_gw_cw_role[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
 }
 
 # Resource    : Api Gateway Stage
 # Description : Terraform resource to create Api Gateway Stage on AWS
 resource "aws_api_gateway_stage" "default" {
-  depends_on = [aws_api_gateway_account.this]
+  depends_on = [aws_api_gateway_account[0].this]
 
   for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage }
 
