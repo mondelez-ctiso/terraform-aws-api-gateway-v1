@@ -45,6 +45,8 @@ resource "aws_api_gateway_domain_name" "api_domain_edge" {
       types = endpoint_configuration.value.types
     }
   }
+
+  depends_on = [ aws_route53_record.api_dns ]
 }
 
 # Resource    : REGIONAL Api Gateway Custom Domain Name
@@ -61,6 +63,8 @@ resource "aws_api_gateway_domain_name" "api_domain_regional" {
       types = endpoint_configuration.value.types
     }
   }
+
+  depends_on = [ aws_route53_record.api_dns ]
 }
 
 # Resource    : Api Gateway Base Path Mapping
