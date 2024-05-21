@@ -52,8 +52,8 @@ resource "aws_api_gateway_domain_name" "api_domain_edge" {
 resource "aws_api_gateway_domain_name" "api_domain_regional" {
   for_each = var.api_gateway != null && local.api_gateway.custom_domain != null && local.is_regional ? { for gw in [local.api_gateway] : gw.name => gw } : {}
 
-  certificate_arn = each.value["acm_cert_arn"]
-  domain_name     = each.value["custom_domain"]
+  regional_certificate_arn = each.value["acm_cert_arn"]
+  domain_name              = each.value["custom_domain"]
 
   dynamic "endpoint_configuration" {
     for_each = each.value["endpoint_configuration"] == null ? [] : [each.value["endpoint_configuration"]]
