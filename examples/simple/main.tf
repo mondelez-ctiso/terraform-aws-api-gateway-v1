@@ -9,7 +9,7 @@ module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 4.0"
 
-  domain_name = "simple.apigw-test.aws.mdlz.com"
+  domain_name = "apigw-test.aws.mdlz.com"
   zone_id     = data.aws_route53_zone.this.id
 }
 
