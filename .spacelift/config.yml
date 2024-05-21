@@ -1,5 +1,5 @@
 version: 1
-module_version: 5.0.0
+module_version: 5.0.1
 
 test_defaults:
   runner_image: 331422937941.dkr.ecr.us-east-2.amazonaws.com/mdlz-spacelift:latest
