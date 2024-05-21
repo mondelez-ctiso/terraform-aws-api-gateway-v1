@@ -1,6 +1,8 @@
 ###########################
-# Supporting resources
-#######RIP####################
+# Supporting resources  ###
+###########################
+
+
 
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
@@ -40,6 +42,7 @@ module "api_gateway" {
     description              = "The test api-gateway"
     minimum_compression_size = 0
     api_key_source           = "HEADER"
+    default_deployment_name  = "prod"
     endpoint_configuration = {
       types = ["REGIONAL"]
     }
