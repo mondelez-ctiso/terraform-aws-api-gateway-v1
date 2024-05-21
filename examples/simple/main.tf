@@ -56,7 +56,7 @@ module "api_gateway" {
     }
     api_gateway_client_cert_enabled = false
     hosted_zone_id                      = data.aws_route53_zone.this.id
-    custom_domain                       = "simple.apigw-test.aws.mdlz.com"
+    custom_domain                       = "apigw-test.aws.mdlz.com"
     acm_cert_arn                        = module.acm.acm_certificate_arn
     base_path_mapping_active_stage_name = "prod"
     # default_deployment_name             = "prod"
