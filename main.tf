@@ -31,10 +31,26 @@ resource "aws_api_gateway_client_certificate" "default" {
   tags        = var.tags
 }
 
-# Resource    : Api Gateway Custom Domain Name
-# Description : Terraform resource to create Api Gateway Custom Domain on AWS.
+# Resource    : EDGE Api Gateway Custom Domain Name
+# Description : Terraform resource to create Api Gateway Custom Domain on AWS at EDGE
 resource "aws_api_gateway_domain_name" "api_domain" {
-  for_each = var.api_gateway != null && local.api_gateway.custom_domain != null ? { for gw in [local.api_gateway] : gw.name => gw } : {}
+  for_each = var.api_gateway != null && local.api_gateway.custom_domain != null && !local.is_regional ? { for gw in [local.api_gateway] : gw.name => gw } : {}
+
+  certificate_arn = each.value["acm_cert_arn"]
+  domain_name     = each.value["custom_domain"]
+
+  dynamic "endpoint_configuration" {
+    for_each = each.value["endpoint_configuration"] == null ? [] : [each.value["endpoint_configuration"]]
+    content {
+      types = endpoint_configuration.value.types
+    }
+  }
+}
+
+# Resource    : REGIONAL Api Gateway Custom Domain Name
+# Description : Terraform resource to create Api Gateway Custom Domain on AWS at REGIONAL
+resource "aws_api_gateway_domain_name" "api_domain" {
+  for_each = var.api_gateway != null && local.api_gateway.custom_domain != null && local.is_regional ? { for gw in [local.api_gateway] : gw.name => gw } : {}
 
   certificate_arn = each.value["acm_cert_arn"]
   domain_name     = each.value["custom_domain"]

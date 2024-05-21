@@ -51,7 +51,6 @@ module "api_gateway" {
     description              = "The test api-gateway"
     minimum_compression_size = 0
     api_key_source           = "HEADER"
-    default_deployment_name  = "prod"
     endpoint_configuration = {
       types = ["REGIONAL"]
     }
@@ -60,6 +59,7 @@ module "api_gateway" {
     custom_domain                       = "simple.apigw-test.aws.mdlz.com"
     acm_cert_arn                        = module.acm.acm_certificate_arn
     base_path_mapping_active_stage_name = "prod"
+    default_deployment_name             = "prod"
   }
 
   api_gateway_stages = [
