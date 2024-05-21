@@ -71,6 +71,7 @@ locals {
       }
   )]
 
+  # Test to see if any method has optional "settings" (access logs)
   any_api_method_with_settings = anytrue([
     for method in var.api_gateway_methods :
     contains(keys(method.api_method), "settings")
