@@ -79,9 +79,9 @@ locals {
   is_regional = (
     local.api_gateway.endpoint_configuration != null &&
     length(local.api_gateway.endpoint_configuration.types) == 1 &&
-    var.api_gateway.endpoint_configuration.types[0] == "REGIONAL"
+    local.api_gateway.endpoint_configuration.types[0] == "REGIONAL"
   )
-  
+
   # Create a list of maps combining each stage_name with each api_method
   stage_api_methods = flatten([
     for stage in local.api_gateway_stages : [
