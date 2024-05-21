@@ -33,7 +33,7 @@ resource "aws_api_gateway_client_certificate" "default" {
 
 # Resource    : EDGE Api Gateway Custom Domain Name
 # Description : Terraform resource to create Api Gateway Custom Domain on AWS at EDGE
-resource "aws_api_gateway_domain_name" "api_domain" {
+resource "aws_api_gateway_domain_name" "api_domain_edge" {
   for_each = var.api_gateway != null && local.api_gateway.custom_domain != null && !local.is_regional ? { for gw in [local.api_gateway] : gw.name => gw } : {}
 
   certificate_arn = each.value["acm_cert_arn"]
@@ -49,7 +49,7 @@ resource "aws_api_gateway_domain_name" "api_domain" {
 
 # Resource    : REGIONAL Api Gateway Custom Domain Name
 # Description : Terraform resource to create Api Gateway Custom Domain on AWS at REGIONAL
-resource "aws_api_gateway_domain_name" "api_domain" {
+resource "aws_api_gateway_domain_name" "api_domain_regional" {
   for_each = var.api_gateway != null && local.api_gateway.custom_domain != null && local.is_regional ? { for gw in [local.api_gateway] : gw.name => gw } : {}
 
   certificate_arn = each.value["acm_cert_arn"]
@@ -81,14 +81,14 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
 resource "aws_route53_record" "api_dns" {
   for_each = var.api_gateway != null && local.api_gateway.custom_domain != null ? { for gw in [local.api_gateway] : gw.name => gw } : {}
 
-  name    = aws_api_gateway_domain_name.api_domain[local.api_gateway.name].domain_name
+  name    = local.is_regional ? aws_api_gateway_domain_name.api_domain_regional[local.api_gateway.name].domain_name : aws_api_gateway_domain_name.api_domain_edge[local.api_gateway.name].domain_name
   type    = "A"
   zone_id = each.value["hosted_zone_id"]
 
   alias {
     evaluate_target_health = true
-    name                   = aws_api_gateway_domain_name.api_domain[local.api_gateway.name].cloudfront_domain_name
-    zone_id                = aws_api_gateway_domain_name.api_domain[local.api_gateway.name].cloudfront_zone_id
+    name                   = local.is_regional ? aws_api_gateway_domain_name.api_domain_regional[local.api_gateway.name].cloudfront_domain_name : aws_api_gateway_domain_name.api_domain_edge[local.api_gateway.name].cloudfront_domain_name
+    zone_id                = local.is_regional ? aws_api_gateway_domain_name.api_domain_regional[local.api_gateway.name].cloudfront_zone_id : aws_api_gateway_domain_name.api_domain_edge[local.api_gateway.name].cloudfront_zone_id
   }
 }
 
