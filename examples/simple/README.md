@@ -18,6 +18,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | ~> 4.0 |
 | <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | ../..//. | n/a |
 | <a name="module_lambda_function"></a> [lambda\_function](#module\_lambda\_function) | terraform-aws-modules/lambda/aws | ~> 4.0.0 |
 
@@ -26,6 +27,7 @@
 | Name | Type |
 |------|------|
 | [aws_cloudwatch_log_group.api_gw_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_route53_zone.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
 

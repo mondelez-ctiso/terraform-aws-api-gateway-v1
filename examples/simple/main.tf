@@ -54,13 +54,45 @@ module "api_gateway" {
     endpoint_configuration = {
       types = ["REGIONAL"]
     }
-    api_gateway_client_cert_enabled = false
+    api_gateway_client_cert_enabled     = false
     hosted_zone_id                      = data.aws_route53_zone.this.id
     custom_domain                       = "apigw-test.aws.mdlz.com"
     acm_cert_arn                        = module.acm.acm_certificate_arn
     base_path_mapping_active_stage_name = "prod"
     # default_deployment_name             = "prod"
   }
+
+  api_gateway_models = [
+    {
+      name         = "UserConfigResponseModel"
+      description  = "API response for GetUserConfig"
+      content_type = "application/json"
+      schema = jsonencode(
+        {
+          "$schema" = "http://json-schema.org/draft-04/schema#"
+          properties = {
+            HomeDirectory = {
+              type = "string"
+            }
+            Policy = {
+              type = "string"
+            }
+            PublicKeys = {
+              items = {
+                type = "string"
+              }
+              type = "array"
+            }
+            Role = {
+              type = "string"
+            }
+          }
+          title = "UserUserConfig"
+          type  = "object"
+        }
+      )
+    }
+  ]
 
   api_gateway_stages = [
     {
@@ -80,6 +112,7 @@ module "api_gateway" {
       }]
     }
   ]
+
   api_gateway_methods = [
     {
       resource_path = "myPath"
@@ -118,6 +151,13 @@ module "api_gateway" {
           uri = module.lambda_function.lambda_function_invoke_arn
         }
         http_method = "GET"
+        response = {
+          status_code   = "200"
+          response_type = null
+          response_models = {
+            "application/json" = "UserConfigResponseModel"
+          }
+        }
       }
     }
   ]
