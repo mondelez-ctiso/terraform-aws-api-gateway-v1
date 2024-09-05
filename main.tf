@@ -107,7 +107,7 @@ resource "aws_api_gateway_deployment" "default" {
       aws_api_gateway_integration.default,
       aws_api_gateway_integration.options_integration,
       aws_api_gateway_method.default,
-      aws_api_gateway_method.options_method.
+      aws_api_gateway_method.options_method,
       aws_api_gateway_model.default
       ]))
   }
