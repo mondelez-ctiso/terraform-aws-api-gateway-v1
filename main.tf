@@ -353,7 +353,7 @@ resource "aws_api_gateway_method_response" "default" {
   response_models     = each.value["api_method"]["response"]["response_models"]
   response_parameters = each.value["api_method"]["response"]["response_parameters"]
 
-  depends_on = [aws_api_gateway_model.default]
+  depends_on = [aws_api_gateway_method.default, aws_api_gateway_model.default]
 }
 
 # Resource    : Api Gateway Integration
