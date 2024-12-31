@@ -98,7 +98,6 @@ resource "aws_api_gateway_deployment" "default" {
   for_each = var.api_gateway != null && local.api_gateway.default_deployment_name != null ? { for gw in [local.api_gateway] : gw.name => gw } : {}
 
   rest_api_id = aws_api_gateway_rest_api.default[local.api_gateway.name].id
-  stage_name  = each.value["default_deployment_name"]
   description = each.value["default_deployment_description"]
   variables   = each.value["default_deployment_variables"]
 
@@ -140,7 +139,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 resource "aws_iam_role" "api_gw_cw_role" {
   count = local.any_api_method_with_settings ? 1 : 0
 
-  name               = "APIGWCloudwatchrole"
+  name               = "APIGWCloudwatchrole-${data.aws_region.current.name}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
