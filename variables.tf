@@ -1404,3 +1404,9 @@ variable "cors_origin_domain" {
   description = "The domain of the site that is calling this api.  e.g. https://bitlocker.pgcloud.com"
   default     = ""
 }
+
+variable "remap_main_to_prod" {
+  type        = bool
+  description = "Remaps the Spacelift stack branch 'main' to 'prod' for the API Gateway stage and custom domain mapping."
+  default     = true
+}

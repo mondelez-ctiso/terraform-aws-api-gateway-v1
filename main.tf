@@ -66,7 +66,7 @@ resource "aws_api_gateway_domain_name" "api_domain_regional" {
 # Resource    : Api Gateway Base Path Mapping
 # Description : Terraform resource to create Api Gateway base path mapping on AWS.
 resource "aws_api_gateway_base_path_mapping" "mapping" {
-  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage if local.api_gateway.custom_domain != null }
+  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" && var.remap_main_to_prod ? "prod" : stage.stage_name => stage if local.api_gateway.custom_domain != null }
 
   api_id      = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   stage_name  = each.key
@@ -108,7 +108,7 @@ resource "aws_api_gateway_deployment" "default" {
       aws_api_gateway_method.default,
       aws_api_gateway_method.options_method,
       aws_api_gateway_model.default
-      ]))
+    ]))
   }
 
   depends_on = [aws_api_gateway_method.default, aws_api_gateway_integration.default, aws_api_gateway_model.default]
@@ -155,7 +155,7 @@ resource "aws_iam_role_policy_attachment" "api_gw_cw_role_policy_attachment" {
 resource "aws_api_gateway_stage" "default" {
   depends_on = [aws_api_gateway_account.this[0]]
 
-  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage }
+  for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" && var.remap_main_to_prod ? "prod" : stage.stage_name => stage }
 
   rest_api_id           = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   deployment_id         = aws_api_gateway_deployment.default[local.api_gateway.name].id
@@ -182,7 +182,7 @@ resource "aws_api_gateway_stage" "default" {
 # Resource    : Api Gateway WAF Association
 # Description : Terraform resource to associate a WAF to the API Gateway.
 resource "aws_wafv2_web_acl_association" "association" {
-  for_each     = { for stage in local.api_gateway_stages : stage.stage_name == "main" ? "prod" : stage.stage_name => stage if stage.web_acl_enabled }
+  for_each     = { for stage in local.api_gateway_stages : stage.stage_name == "main" && var.remap_main_to_prod ? "prod" : stage.stage_name => stage if stage.web_acl_enabled }
   resource_arn = aws_api_gateway_stage.default[each.key].arn
   web_acl_arn  = each.value["web_acl_arn"]
 }
