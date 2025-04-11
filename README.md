@@ -815,6 +815,7 @@ No modules.
 | [aws_route53_record.api_dns](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_wafv2_web_acl_association.association](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_association) | resource |
 | [aws_iam_policy_document.assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
 
@@ -843,6 +844,7 @@ No modules.
 | <a name="input_options_integration_default"></a> [options\_integration\_default](#input\_options\_integration\_default) | n/a | `any` | <pre>{<br>  "cache_key_parameters": null,<br>  "cache_namespace": null,<br>  "connection_id": null,<br>  "connection_type": null,<br>  "content_handling": "CONVERT_TO_TEXT",<br>  "credentials": null,<br>  "integration_http_method": null,<br>  "passthrough_behavior": null,<br>  "request_parameters": {},<br>  "request_templates": {<br>    "application/json": "{ \"statusCode\": 200 }"<br>  },<br>  "timeout_milliseconds": 29000,<br>  "type": "MOCK",<br>  "uri": null<br>}</pre> | no |
 | <a name="input_options_integration_response_default"></a> [options\_integration\_response\_default](#input\_options\_integration\_response\_default) | n/a | `any` | <pre>{<br>  "content_handling": null,<br>  "response_parameters": {},<br>  "response_template": {<br>    "application/json": ""<br>  },<br>  "selection_pattern": null,<br>  "status_code": "200"<br>}</pre> | no |
 | <a name="input_options_response_default"></a> [options\_response\_default](#input\_options\_response\_default) | n/a | `any` | <pre>{<br>  "response_models": {},<br>  "response_parameters": {<br>    "method.response.header.Access-Control-Allow-Credentials": true,<br>    "method.response.header.Access-Control-Allow-Headers": true,<br>    "method.response.header.Access-Control-Allow-Methods": true,<br>    "method.response.header.Access-Control-Allow-Origin": true<br>  },<br>  "status_code": "200"<br>}</pre> | no |
+| <a name="input_remap_main_to_prod"></a> [remap\_main\_to\_prod](#input\_remap\_main\_to\_prod) | Remaps the Spacelift stack branch 'main' to 'prod' for the API Gateway stage and custom domain mapping. | `bool` | `true` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to add to all resources. | `map(string)` | `{}` | no |
 | <a name="input_vpc_link_default"></a> [vpc\_link\_default](#input\_vpc\_link\_default) | AWS API Gateway VPC link defaults. | `any` | <pre>{<br>  "target_arns": null,<br>  "vpc_link_description": "Managed by terraform-aws-api-gateway-v1 module",<br>  "vpc_link_name": null<br>}</pre> | no |
 | <a name="input_vpc_links"></a> [vpc\_links](#input\_vpc\_links) | AWS API Gateway VPC links. | `any` | `[]` | no |
