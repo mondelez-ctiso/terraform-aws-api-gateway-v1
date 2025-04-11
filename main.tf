@@ -136,10 +136,14 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
+resource "random_id" "random" {
+  byte_length = 2
+}
+
 resource "aws_iam_role" "api_gw_cw_role" {
   count = local.any_api_method_with_settings ? 1 : 0
 
-  name               = "APIGWCloudwatchrole-${data.aws_region.current.name}"
+  name               = "APIGWCloudwatchrole-${data.aws_region.current.name}-${random_id.random.hex}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
