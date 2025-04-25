@@ -45,6 +45,10 @@ resource "aws_api_gateway_domain_name" "api_domain_edge" {
       types = endpoint_configuration.value.types
     }
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Resource    : REGIONAL Api Gateway Custom Domain Name
@@ -61,6 +65,19 @@ resource "aws_api_gateway_domain_name" "api_domain_regional" {
       types = endpoint_configuration.value.types
     }
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [
+    aws_api_gateway_domain_name.api_domain_regional,
+    aws_api_gateway_domain_name.api_domain_edge
+  ]
+
+  create_duration = "30s"
 }
 
 # Resource    : Api Gateway Base Path Mapping
@@ -73,7 +90,13 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
   domain_name = local.api_gateway.custom_domain
   base_path   = each.key == "prod" ? "" : each.key
 
-  depends_on = [aws_api_gateway_deployment.default, aws_api_gateway_stage.default]
+  depends_on = [
+    aws_api_gateway_deployment.default,
+    aws_api_gateway_stage.default,
+    aws_api_gateway_domain_name.api_domain_regional,
+    aws_api_gateway_domain_name.api_domain_edge,
+    time_sleep.wait_30_seconds
+  ]
 }
 
 # Resource    : DNS record using Route53.
