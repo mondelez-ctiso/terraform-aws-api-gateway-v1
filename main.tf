@@ -86,7 +86,7 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
   for_each = { for stage in local.api_gateway_stages : stage.stage_name == "main" && var.remap_main_to_prod ? "prod" : stage.stage_name => stage if local.api_gateway.custom_domain != null }
 
   api_id      = aws_api_gateway_rest_api.default[local.api_gateway.name].id
-  stage_name  = each.key
+  stage_name  = each.key # This will be "prod" when main is remapped
   domain_name = local.api_gateway.custom_domain
   base_path   = each.key == "prod" ? "" : each.key
 
@@ -182,7 +182,7 @@ resource "aws_api_gateway_stage" "default" {
 
   rest_api_id           = aws_api_gateway_rest_api.default[local.api_gateway.name].id
   deployment_id         = aws_api_gateway_deployment.default[local.api_gateway.name].id
-  stage_name            = each.value["stage_name"]
+  stage_name            = each.key # This will be "prod" when main is remapped
   cache_cluster_enabled = each.value["cache_cluster_enabled"]
   cache_cluster_size    = each.value["cache_cluster_size"]
   client_certificate_id = each.value["client_certificate_id"] != null ? each.value["client_certificate_id"] : (local.api_gateway.client_cert_enabled ? aws_api_gateway_client_certificate.default[local.api_gateway.name].id : "")
